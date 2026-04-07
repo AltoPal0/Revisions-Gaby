@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="40" fill="#070b14"/>
+  <rect x="16" y="16" width="160" height="160" rx="28" fill="#0f1628" stroke="#e8b84b" stroke-width="2"/>
+  <text x="96" y="80" font-family="system-ui,sans-serif" font-weight="900" font-size="44" fill="#e8b84b" text-anchor="middle" dominant-baseline="middle">H</text>
+  <text x="96" y="130" font-family="system-ui,sans-serif" font-weight="900" font-size="32" fill="#f0f4ff" text-anchor="middle" dominant-baseline="middle">PARDY</text>
+</svg>

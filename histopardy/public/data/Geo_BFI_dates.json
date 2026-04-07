@@ -1,0 +1,288 @@
+{
+  "matiere": "Géographie BFI Terminale",
+  "description": "Dates clés pour flashcards - Géographie BFI",
+  "niveaux": {
+    "1": "Incontournable - à savoir absolument",
+    "2": "Important - très utile pour le bac",
+    "3": "Approfondissement - montre une bonne maîtrise",
+    "4": "Expert - pour se démarquer, pas indispensable"
+  },
+  "themes": [
+    {
+      "numero": 1,
+      "titre": "La mondialisation",
+      "dates": [
+        {
+          "date": "1944",
+          "evenement": "Accords de Bretton Woods (FMI, Banque mondiale)",
+          "contexte": "Après la guerre, les Alliés créent un système monétaire stable pour relancer le commerce mondial.",
+          "niveau": 1
+        },
+        {
+          "date": "1995",
+          "evenement": "Création de l'OMC (remplace le GATT)",
+          "contexte": "Le commerce mondial obtient une institution permanente avec pouvoir de sanction et de règlement des litiges.",
+          "niveau": 1
+        },
+        {
+          "date": "2001",
+          "evenement": "Entrée de la Chine dans l'OMC",
+          "contexte": "Intégration du géant chinois dans le commerce mondial, accélération massive de la mondialisation.",
+          "niveau": 1
+        },
+        {
+          "date": "2008",
+          "evenement": "Crise des subprimes (crise financière mondiale)",
+          "contexte": "La crise financière américaine se propage mondialement, démontrant l'interdépendance des économies.",
+          "niveau": 1
+        },
+        {
+          "date": "1947",
+          "evenement": "Création du GATT",
+          "contexte": "Volonté de libéraliser le commerce international pour éviter le protectionnisme de l'entre-deux-guerres.",
+          "niveau": 2
+        },
+        {
+          "date": "1989",
+          "evenement": "Chute du mur de Berlin (ouverture des marchés de l'Est)",
+          "contexte": "La chute du Mur ouvre l'économie mondiale aux anciens pays communistes, mondialisation accélérée.",
+          "niveau": 2
+        },
+        {
+          "date": "2013",
+          "evenement": "Lancement des Nouvelles Routes de la Soie (BRI)",
+          "contexte": "La Chine lance un projet d'infrastructures mondial pour étendre son influence géoéconomique sur tous les continents.",
+          "niveau": 2
+        },
+        {
+          "date": "1971",
+          "evenement": "Fin de l'étalon-or (choc Nixon)",
+          "contexte": "Les USA abandonnent la convertibilité or-dollar, fin du système monétaire de Bretton Woods.",
+          "niveau": 3
+        },
+        {
+          "date": "1991",
+          "evenement": "Signature de l'ALENA",
+          "contexte": "Création d'un marché commun en Amérique du Nord entre USA, Canada et Mexique, régionalisation du commerce.",
+          "niveau": 3
+        },
+        {
+          "date": "2001",
+          "evenement": "Premier Forum social mondial (Porto Alegre)",
+          "contexte": "Forum altermondialiste né en réaction au Forum de Davos : 'un autre monde est possible'.",
+          "niveau": 4
+        }
+      ]
+    },
+    {
+      "numero": 2,
+      "titre": "Dynamiques territoriales, inégalités et métropolisation",
+      "dates": [
+        {
+          "date": "2008",
+          "evenement": "Seuil de 50% de population urbaine mondiale",
+          "contexte": "Pour la première fois dans l'histoire, plus de la moitié de l'humanité vit en ville.",
+          "niveau": 1
+        },
+        {
+          "date": "2020",
+          "evenement": "Crise du Covid-19",
+          "contexte": "La pandémie révèle la fragilité des chaînes de production mondialisées et creuse les inégalités Nord/Sud.",
+          "niveau": 1
+        },
+        {
+          "date": "2015",
+          "evenement": "Adoption des 17 ODD (Objectifs de Développement Durable)",
+          "contexte": "Objectifs universels de l'ONU pour un développement durable et inclusif à atteindre d'ici 2030.",
+          "niveau": 2
+        },
+        {
+          "date": "1950-1975",
+          "evenement": "Les Trente Glorieuses",
+          "contexte": "Croissance économique sans précédent, urbanisation massive et exode rural en Europe.",
+          "niveau": 2
+        },
+        {
+          "date": "1978",
+          "evenement": "Réformes de Deng Xiaoping (ouverture économique de la Chine)",
+          "contexte": "La Chine s'ouvre au capitalisme tout en gardant un régime communiste, début de son ascension économique.",
+          "niveau": 2
+        },
+        {
+          "date": "1960s",
+          "evenement": "Indépendances africaines",
+          "contexte": "Vague de décolonisation en Afrique, naissance de nouveaux États confrontés au défi du développement.",
+          "niveau": 3
+        },
+        {
+          "date": "2000",
+          "evenement": "Objectifs du Millénaire pour le Développement (OMD)",
+          "contexte": "L'ONU fixe des objectifs chiffrés pour réduire la pauvreté mondiale d'ici 2015.",
+          "niveau": 3
+        },
+        {
+          "date": "1991",
+          "evenement": "Dissolution de l'URSS (recomposition des territoires)",
+          "contexte": "Éclatement du bloc soviétique, transition difficile vers l'économie de marché pour les anciens pays communistes.",
+          "niveau": 3
+        }
+      ]
+    },
+    {
+      "numero": 3,
+      "titre": "L'environnement, enjeu planétaire",
+      "dates": [
+        {
+          "date": "1992",
+          "evenement": "Sommet de la Terre à Rio",
+          "contexte": "Sommet fondateur de la gouvernance environnementale mondiale, naissance des COP et de l'Agenda 21.",
+          "niveau": 1
+        },
+        {
+          "date": "2015",
+          "evenement": "Accord de Paris (COP21)",
+          "contexte": "Premier accord universel sur le climat : 195 pays s'engagent à limiter le réchauffement à +1.5/2°C.",
+          "niveau": 1
+        },
+        {
+          "date": "1972",
+          "evenement": "Rapport Meadows 'Halte à la croissance' (Club de Rome)",
+          "contexte": "Premier rapport scientifique alertant sur les limites de la croissance économique infinie dans un monde fini.",
+          "niveau": 1
+        },
+        {
+          "date": "1987",
+          "evenement": "Rapport Brundtland",
+          "contexte": "Invention du concept de 'développement durable' : répondre aux besoins du présent sans compromettre l'avenir.",
+          "niveau": 2
+        },
+        {
+          "date": "1997",
+          "evenement": "Protocole de Kyoto",
+          "contexte": "Premier accord contraignant de réduction des gaz à effet de serre, mais non ratifié par les USA.",
+          "niveau": 2
+        },
+        {
+          "date": "1972",
+          "evenement": "Conférence de Stockholm",
+          "contexte": "Première conférence mondiale sur l'environnement, naissance de la diplomatie verte et du PNUE.",
+          "niveau": 3
+        },
+        {
+          "date": "1986",
+          "evenement": "Accident de Tchernobyl",
+          "contexte": "Catastrophe nucléaire majeure qui relance le débat mondial sur l'énergie atomique.",
+          "niveau": 3
+        },
+        {
+          "date": "2011",
+          "evenement": "Accident de Fukushima",
+          "contexte": "Catastrophe nucléaire au Japon qui relance le débat mondial sur la sortie du nucléaire.",
+          "niveau": 3
+        },
+        {
+          "date": "2018",
+          "evenement": "Début des Fridays for Future (Greta Thunberg)",
+          "contexte": "Une lycéenne suédoise lance un mouvement mondial de grèves scolaires pour le climat.",
+          "niveau": 3
+        },
+        {
+          "date": "2022",
+          "evenement": "COP15 Biodiversité (Montréal)",
+          "contexte": "Accord historique pour protéger 30% des terres et des mers d'ici 2030.",
+          "niveau": 4
+        },
+        {
+          "date": "2006",
+          "evenement": "Rapport Stern",
+          "contexte": "Rapport économique démontrant que l'inaction climatique coûtera plus cher que l'action.",
+          "niveau": 4
+        },
+        {
+          "date": "2019",
+          "evenement": "Rapport IPBES",
+          "contexte": "Rapport alarmant sur l'effondrement de la biodiversité : 1 million d'espèces menacées d'extinction.",
+          "niveau": 4
+        }
+      ]
+    },
+    {
+      "numero": 4,
+      "titre": "L'Union européenne et la France dans le monde",
+      "dates": [
+        {
+          "date": "1957",
+          "evenement": "Traité de Rome (CEE)",
+          "contexte": "Acte fondateur de la construction européenne, marché commun à six pays pour rendre la guerre impossible.",
+          "niveau": 1
+        },
+        {
+          "date": "1992",
+          "evenement": "Traité de Maastricht (naissance de l'UE)",
+          "contexte": "L'Europe passe de l'économique au politique : citoyenneté européenne, monnaie unique prévue.",
+          "niveau": 1
+        },
+        {
+          "date": "23 juin 2016",
+          "evenement": "Référendum du Brexit",
+          "contexte": "Le Royaume-Uni vote sa sortie de l'UE, première fois qu'un État membre quitte l'Union.",
+          "niveau": 1
+        },
+        {
+          "date": "1er janvier 2002",
+          "evenement": "Mise en circulation de l'euro",
+          "contexte": "Monnaie unique pour 12 pays, intégration économique concrète pour 300 millions de citoyens.",
+          "niveau": 2
+        },
+        {
+          "date": "2004",
+          "evenement": "'Big bang' de l'élargissement européen",
+          "contexte": "10 nouveaux membres dont d'anciens pays communistes, l'UE passe de 15 à 25 États.",
+          "niveau": 2
+        },
+        {
+          "date": "24 février 2022",
+          "evenement": "Guerre en Ukraine",
+          "contexte": "L'invasion russe relance l'unité européenne en matière de défense, d'énergie et de sanctions.",
+          "niveau": 2
+        },
+        {
+          "date": "1951",
+          "evenement": "Création de la CECA",
+          "contexte": "Six pays mutualisent charbon et acier pour rendre la guerre matériellement impossible (idée de Schuman/Monnet).",
+          "niveau": 2
+        },
+        {
+          "date": "1995",
+          "evenement": "Entrée en vigueur de l'espace Schengen",
+          "contexte": "Libre circulation des personnes sans contrôle aux frontières intérieures de l'UE.",
+          "niveau": 3
+        },
+        {
+          "date": "1986",
+          "evenement": "Acte unique européen",
+          "contexte": "Objectif de supprimer toutes les frontières intérieures pour les marchandises, services et personnes.",
+          "niveau": 3
+        },
+        {
+          "date": "2005",
+          "evenement": "Rejet du Traité constitutionnel européen",
+          "contexte": "Le 'non' français et néerlandais bloque l'approfondissement politique de l'UE, crise de confiance.",
+          "niveau": 3
+        },
+        {
+          "date": "2015",
+          "evenement": "Crise migratoire européenne",
+          "contexte": "Afflux massif de réfugiés (Syrie, etc.) qui divise l'Europe sur la solidarité et les frontières.",
+          "niveau": 3
+        },
+        {
+          "date": "2020",
+          "evenement": "Plan de relance européen post-Covid (750 Mds€)",
+          "contexte": "L'UE emprunte ensemble pour la première fois, solidarité budgétaire inédite face à la crise.",
+          "niveau": 4
+        }
+      ]
+    }
+  ]
+}

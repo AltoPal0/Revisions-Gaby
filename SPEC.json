@@ -1,0 +1,297 @@
+{
+  "project": {
+    "name": "HistoPardy",
+    "description": "Jeu Jeopardy de révision des dates d'Histoire et Géopolitique pour la Terminale BFI",
+    "stack": {
+      "framework": "Vite + React",
+      "animations": "GSAP ou Framer Motion pour micro-animations addictives",
+      "storage": "localStorage (tout en local, pas de backend)",
+      "network": "Accessible sur réseau local via vite --host",
+      "pwa": true,
+      "pwaReason": "Installation sur l'écran d'accueil du téléphone pour plus de real estate"
+    }
+  },
+
+  "data": {
+    "sources": [
+      {
+        "file": "Histoire_BFI_dates.json",
+        "matiere": "Histoire",
+        "structure": "themes[] > dates[]",
+        "themesCount": 4,
+        "datesCount": 65
+      },
+      {
+        "file": "Geo_BFI_dates.json",
+        "matiere": "Géographie",
+        "structure": "themes[] > dates[]",
+        "themesCount": 4,
+        "datesCount": 42
+      },
+      {
+        "file": "HGGSP_revision_dates.json",
+        "matiere": "HGGSP (Géopolitique)",
+        "structure": "themes[] > axes[] > dates[]",
+        "themesCount": 4,
+        "datesCount": 65
+      }
+    ],
+    "niveaux": {
+      "1": { "label": "Incontournable", "description": "A savoir absolument", "weight": 4 },
+      "2": { "label": "Important", "description": "Tres utile pour le bac", "weight": 3 },
+      "3": { "label": "Approfondissement", "description": "Montre une bonne maitrise", "weight": 2 },
+      "4": { "label": "Expert", "description": "Pour se demarquer", "weight": 1 }
+    },
+    "dateFormats": [
+      "JJ mois AAAA (ex: 28 juin 1919)",
+      "mois AAAA (ex: octobre 1962)",
+      "AAAA (ex: 1947)",
+      "Periode (ex: 1944-1946, mai-juin 1968)",
+      "JJ-JJ mois AAAA (ex: 29-30 septembre 1938)"
+    ]
+  },
+
+  "gameplay": {
+    "board": {
+      "description": "Grille Jeopardy avec colonnes par theme et lignes par valeur de points",
+      "columns": "Themes (Histoire ou Geopo, melange possible)",
+      "rows": 5,
+      "pointValues": [100, 200, 300, 400, 500],
+      "difficulty_mapping": {
+        "100": {
+          "nbCards": 1,
+          "dateSelection": "Priorite dates niveau 1 (incontournables)",
+          "description": "1 flashcard, date incontournable"
+        },
+        "200": {
+          "nbCards": 1,
+          "dateSelection": "Dates niveau 1-2",
+          "description": "1 flashcard, date importante"
+        },
+        "300": {
+          "nbCards": 2,
+          "dateSelection": "Mix niveaux 1-2, eventuellement 3",
+          "description": "2 flashcards a deviner"
+        },
+        "400": {
+          "nbCards": 2,
+          "dateSelection": "Mix niveaux 2-3",
+          "description": "2 flashcards avec des dates d'approfondissement"
+        },
+        "500": {
+          "nbCards": 3,
+          "dateSelection": "Mix niveaux 1-2-3, peut inclure niveau 4",
+          "description": "3 flashcards, mix de difficultes"
+        }
+      }
+    },
+
+    "flashcard": {
+      "front": {
+        "evenement": "Nom de l'evenement",
+        "contexte": "Ligne de contexte explicatif"
+      },
+      "back": {
+        "date_complète": "La date exacte"
+      },
+      "interaction": {
+        "step1_annee": {
+          "type": "choix_multiple_4",
+          "generation": "4 annees proches de la vraie date (ex: 1917, 1918, 1919, 1920)",
+          "description": "Choisir l'annee parmi 4 propositions"
+        },
+        "step2_mois": {
+          "type": "selection_12_mois",
+          "condition": "Seulement si la date source contient un mois",
+          "description": "Choisir le mois parmi les 12 mois"
+        },
+        "step3_jour": {
+          "type": "choix_multiple_4",
+          "condition": "Seulement si la date source contient un jour",
+          "generation": "4 jours proches (ex: 26, 27, 28, 29)",
+          "description": "Choisir le jour parmi 4 propositions"
+        },
+        "onError": {
+          "behavior": "Animation d'erreur immediate + affichage de la bonne reponse",
+          "animation": "Shake + flash rouge + reveal de la date correcte",
+          "continueFlow": "Passe directement a la carte suivante ou fin de question"
+        },
+        "onSuccess": {
+          "behavior": "Animation de succes + points accordes",
+          "animation": "Confetti/sparkle + flash vert"
+        }
+      }
+    },
+
+    "scoring": {
+      "perCard": {
+        "year_correct": "Base points partiel",
+        "month_correct": "Points supplementaires",
+        "day_correct": "Points supplementaires",
+        "all_correct": "Bonus combo"
+      },
+      "questionTotal": "Somme des cartes * multiplicateur de difficulte"
+    }
+  },
+
+  "players": {
+    "registration": {
+      "method": "Nom uniquement, pas de mot de passe",
+      "storage": "localStorage",
+      "selection": "Liste de tous les joueurs existants, clic pour selectionner"
+    },
+    "profile_data": {
+      "name": "string",
+      "created_at": "timestamp",
+      "date_knowledge": {
+        "description": "Pour chaque date du jeu, stocker le ratio de bonnes reponses",
+        "structure": {
+          "dateId": "hash unique de la date",
+          "attempts": "nombre de tentatives",
+          "successes": "nombre de reussites",
+          "lastAttempt": "timestamp"
+        }
+      },
+      "total_score": "Score cumule de toutes les parties",
+      "games_played": "Nombre de parties jouees"
+    },
+    "adaptive_weighting": {
+      "description": "Systeme de ponderation pour que les dates mal connues reviennent plus souvent",
+      "formula": "probability = (niveau_weight * (1 - success_rate)) / normalization_factor",
+      "details": {
+        "niveau_weight": "Les dates niveau 1 ont un poids de base de 4, niveau 4 un poids de 1",
+        "success_rate": "successes / attempts (0 si jamais tentee)",
+        "never_attempted": "Poids maximal pour les dates jamais tentees",
+        "well_known": "Poids minimal mais jamais 0 (plancher a 0.1)",
+        "normalization": "Tous les poids sont normalises pour former une distribution de probabilite"
+      }
+    }
+  },
+
+  "game_modes": {
+    "solo": {
+      "description": "Un joueur seul contre le tableau",
+      "flow": [
+        "Selection du joueur",
+        "Choix de la matiere (Histoire, Geo, HGGSP, ou Mix)",
+        "Affichage du tableau Jeopardy",
+        "Le joueur clique sur une case",
+        "Affichage des flashcards",
+        "Reponse aux questions (annee > mois > jour)",
+        "Score mis a jour en temps reel",
+        "Partie terminee quand toutes les cases sont jouees"
+      ]
+    },
+    "duel": {
+      "description": "2+ joueurs en mode tour par tour sur le meme appareil",
+      "flow": [
+        "Selection des joueurs participants",
+        "Choix de la matiere",
+        "Affichage du tableau + indicateur du joueur actif",
+        "Le joueur actif choisit une case",
+        "Reponse aux flashcards",
+        "Score individuel mis a jour",
+        "Tour passe au joueur suivant",
+        "Tableau des scores visible en permanence",
+        "Partie terminee quand toutes les cases sont jouees ou quand on arrete"
+      ]
+    }
+  },
+
+  "screens": {
+    "home": {
+      "description": "Ecran d'accueil addictif avec logo anime et boutons principaux",
+      "elements": ["Logo anime", "Bouton Jouer", "Bouton Scores", "Bouton Joueurs"],
+      "constraint": "Tout visible sans scroll sur mobile (hauteur ~100dvh)"
+    },
+    "player_select": {
+      "description": "Selection ou creation de joueur",
+      "elements": ["Liste des joueurs existants (scrollable)", "Bouton creer nouveau joueur", "Input nom (modal)"],
+      "constraint": "Mobile-first, simple et rapide"
+    },
+    "mode_select": {
+      "description": "Choix du mode de jeu et de la matiere",
+      "elements": ["Solo / Duel", "Histoire / Geo / HGGSP / Mix", "Bouton Commencer"],
+      "constraint": "Un ecran, pas de scroll"
+    },
+    "board": {
+      "description": "Le tableau Jeopardy principal",
+      "elements": [
+        "Grille de cases avec themes en colonnes et points en lignes",
+        "Cases deja jouees grisees",
+        "Score(s) en haut",
+        "Indicateur joueur actif (mode duel)"
+      ],
+      "constraint": "Grille lisible sur mobile, colonnes scrollables horizontalement si necessaire"
+    },
+    "question": {
+      "description": "Ecran de question avec flashcard(s)",
+      "elements": [
+        "Flashcard(s) avec evenement + contexte visible",
+        "Zone de reponse (annee > mois > jour)",
+        "Animation de retournement de carte",
+        "Feedback immediat (erreur/succes)"
+      ],
+      "constraint": "Lecture facile, texte gros, tout visible sans scroll"
+    },
+    "scores": {
+      "description": "Tableau des meilleurs scores",
+      "elements": ["Classement par score total", "Stats par joueur", "Dates les plus ratees"],
+      "constraint": "Scrollable, mais header fixe"
+    }
+  },
+
+  "ux_design": {
+    "philosophy": "Sobre, lisible, addictif par les micro-animations",
+    "colors": {
+      "scheme": "Dark theme avec accents vifs",
+      "background": "Bleu tres fonce / quasi noir",
+      "cards": "Bleu nuit avec bordures subtiles",
+      "accent_success": "Vert lumineux",
+      "accent_error": "Rouge vif",
+      "accent_primary": "Or/Jaune dore (rappel Jeopardy)",
+      "text": "Blanc pur sur fond sombre"
+    },
+    "typography": {
+      "primary": "Sans-serif moderne (Inter ou similaire)",
+      "sizes": "Gros par defaut pour lisibilite mobile",
+      "weights": "Bold pour les titres, Regular pour le corps"
+    },
+    "animations": {
+      "card_flip": "Rotation 3D au retournement de la flashcard",
+      "success": "Confetti/particules + pulse vert",
+      "error": "Shake + flash rouge + reveal smooth",
+      "board_entry": "Cases apparaissent en cascade",
+      "score_update": "Counter animation (chiffres qui deroulent)",
+      "transition": "Slide smooth entre les ecrans",
+      "idle": "Glow subtil sur les cases jouables du board"
+    },
+    "mobile_first": {
+      "target": "iPhone (375px - 430px de large)",
+      "fullscreen": "PWA standalone mode, pas de barre Safari",
+      "orientation": "Portrait uniquement",
+      "touch": "Zones de tap genereuses (min 44px)",
+      "viewport": "100dvh pour eviter les problemes de barre d'adresse"
+    }
+  },
+
+  "technical": {
+    "pwa": {
+      "manifest": true,
+      "serviceWorker": "Cache offline pour jouer sans connexion",
+      "icons": "Logo de l'app pour l'ecran d'accueil",
+      "display": "standalone",
+      "theme_color": "Coherent avec le dark theme"
+    },
+    "local_network": {
+      "viteConfig": "server.host = true pour exposer sur le LAN",
+      "description": "Accessible via IP locale sur le reseau WiFi"
+    },
+    "data_management": {
+      "import": "Charger les 3 fichiers JSON au build time ou au runtime",
+      "normalize": "Creer un format unifie pour Histoire (plat) et HGGSP (avec axes)",
+      "dateParser": "Parser les differents formats de date (JJ mois AAAA, AAAA, periodes, etc.)",
+      "dateIdGenerator": "Hash unique par date pour le suivi de progression"
+    }
+  }
+}

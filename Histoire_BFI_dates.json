@@ -1,0 +1,426 @@
+{
+  "matiere": "Histoire BFI Terminale",
+  "description": "Dates clés pour flashcards - Histoire BFI",
+  "niveaux": {
+    "1": "Incontournable - à savoir absolument",
+    "2": "Important - très utile pour le bac",
+    "3": "Approfondissement - montre une bonne maîtrise",
+    "4": "Expert - pour se démarquer, pas indispensable"
+  },
+  "themes": [
+    {
+      "numero": 1,
+      "titre": "Fragilités des démocraties (1918-1939)",
+      "dates": [
+        {
+          "date": "28 juin 1919",
+          "evenement": "Traité de Versailles",
+          "contexte": "L'Allemagne humiliée par des réparations écrasantes, terreau du nationalisme et du ressentiment qui nourriront le nazisme.",
+          "niveau": 1
+        },
+        {
+          "date": "24 octobre 1929",
+          "evenement": "Krach de Wall Street (Jeudi noir)",
+          "contexte": "Effondrement boursier aux USA qui déclenche une dépression mondiale et déstabilise les démocraties européennes.",
+          "niveau": 1
+        },
+        {
+          "date": "30 janvier 1933",
+          "evenement": "Hitler nommé chancelier du Reich",
+          "contexte": "Arrivée légale au pouvoir d'un dictateur, montrant la fragilité des institutions démocratiques face aux crises.",
+          "niveau": 1
+        },
+        {
+          "date": "29-30 septembre 1938",
+          "evenement": "Accords de Munich",
+          "contexte": "Les démocraties cèdent face à Hitler pour éviter la guerre, symbole de la politique d'appeasement qui échoue.",
+          "niveau": 1
+        },
+        {
+          "date": "11 novembre 1918",
+          "evenement": "Armistice de la Première Guerre mondiale",
+          "contexte": "Fin de la Grande Guerre, mais les conditions de paix vont nourrir le ressentiment allemand.",
+          "niveau": 2
+        },
+        {
+          "date": "1922",
+          "evenement": "Marche sur Rome, Mussolini au pouvoir",
+          "contexte": "L'Italie bascule dans le fascisme, premier modèle totalitaire en Europe occidentale.",
+          "niveau": 2
+        },
+        {
+          "date": "23 mars 1933",
+          "evenement": "Loi d'habilitation (Ermächtigungsgesetz)",
+          "contexte": "Le Parlement vote sa propre mort : Hitler obtient les pleins pouvoirs législatifs.",
+          "niveau": 2
+        },
+        {
+          "date": "7 mars 1936",
+          "evenement": "Remilitarisation de la Rhénanie",
+          "contexte": "Hitler défie les Alliés en violant le traité de Versailles sans aucune réaction militaire.",
+          "niveau": 2
+        },
+        {
+          "date": "15 septembre 1935",
+          "evenement": "Lois de Nuremberg",
+          "contexte": "Institutionnalisation de l'antisémitisme d'État en Allemagne, les Juifs privés de citoyenneté.",
+          "niveau": 3
+        },
+        {
+          "date": "27 février 1933",
+          "evenement": "Incendie du Reichstag",
+          "contexte": "Prétexte utilisé par Hitler pour suspendre les libertés fondamentales et réprimer l'opposition.",
+          "niveau": 3
+        },
+        {
+          "date": "6 février 1934",
+          "evenement": "Émeutes antiparlementaires à Paris",
+          "contexte": "La République française menacée par l'extrême droite, crise qui catalyse la formation du Front populaire.",
+          "niveau": 3
+        },
+        {
+          "date": "3 mai 1936",
+          "evenement": "Victoire du Front populaire",
+          "contexte": "Victoire de la gauche unie face à la menace fasciste en France, coalition SFIO-PCF-Radicaux.",
+          "niveau": 3
+        },
+        {
+          "date": "7 juin 1936",
+          "evenement": "Accords de Matignon",
+          "contexte": "Avancées sociales majeures arrachées par les grèves ouvrières : congés payés, semaine de 40h.",
+          "niveau": 3
+        },
+        {
+          "date": "12 mars 1938",
+          "evenement": "Anschluss (annexion de l'Autriche)",
+          "contexte": "L'Allemagne annexe l'Autriche sans opposition internationale, politique du fait accompli.",
+          "niveau": 3
+        },
+        {
+          "date": "9-10 novembre 1938",
+          "evenement": "Nuit de Cristal (Kristallnacht)",
+          "contexte": "Premier pogrom d'État en Allemagne : synagogues brûlées, commerces détruits, étape vers la Shoah.",
+          "niveau": 4
+        }
+      ]
+    },
+    {
+      "numero": 2,
+      "titre": "La Seconde Guerre mondiale",
+      "dates": [
+        {
+          "date": "1er septembre 1939",
+          "evenement": "Invasion de la Pologne - Début de la Seconde Guerre mondiale",
+          "contexte": "L'Allemagne envahit la Pologne, déclenchant la guerre en Europe.",
+          "niveau": 1
+        },
+        {
+          "date": "18 juin 1940",
+          "evenement": "Appel du général de Gaulle (BBC)",
+          "contexte": "Acte fondateur de la Résistance française, refus de la défaite depuis Londres.",
+          "niveau": 1
+        },
+        {
+          "date": "22 juin 1940",
+          "evenement": "Armistice de Rethondes",
+          "contexte": "La France vaincue signe un armistice humiliant avec l'Allemagne, début de l'Occupation.",
+          "niveau": 1
+        },
+        {
+          "date": "6 juin 1944",
+          "evenement": "Débarquement en Normandie (D-Day)",
+          "contexte": "Plus grande opération amphibie de l'histoire, début de la libération de l'Europe occidentale.",
+          "niveau": 1
+        },
+        {
+          "date": "8 mai 1945",
+          "evenement": "Capitulation allemande",
+          "contexte": "Fin de la guerre en Europe après la capitulation sans conditions de l'Allemagne nazie.",
+          "niveau": 1
+        },
+        {
+          "date": "6 et 9 août 1945",
+          "evenement": "Bombes atomiques sur Hiroshima et Nagasaki",
+          "contexte": "Arme nucléaire utilisée pour la première et dernière fois en guerre, début de l'ère atomique.",
+          "niveau": 1
+        },
+        {
+          "date": "22 juin 1941",
+          "evenement": "Opération Barbarossa (invasion de l'URSS)",
+          "contexte": "Ouverture du front de l'Est, tournant majeur qui va épuiser la machine de guerre nazie.",
+          "niveau": 2
+        },
+        {
+          "date": "7 décembre 1941",
+          "evenement": "Attaque japonaise sur Pearl Harbor",
+          "contexte": "Entrée en guerre des États-Unis, la guerre devient véritablement mondiale.",
+          "niveau": 2
+        },
+        {
+          "date": "20 janvier 1942",
+          "evenement": "Conférence de Wannsee (Solution finale)",
+          "contexte": "Les nazis planifient industriellement l'extermination des Juifs d'Europe.",
+          "niveau": 2
+        },
+        {
+          "date": "25 août 1944",
+          "evenement": "Libération de Paris",
+          "contexte": "Symbole de la libération nationale, de Gaulle descend les Champs-Élysées.",
+          "niveau": 2
+        },
+        {
+          "date": "2 septembre 1945",
+          "evenement": "Capitulation du Japon",
+          "contexte": "Fin définitive de la Seconde Guerre mondiale dans le Pacifique.",
+          "niveau": 2
+        },
+        {
+          "date": "10 juillet 1940",
+          "evenement": "Début du régime de Vichy",
+          "contexte": "Le Parlement vote les pleins pouvoirs à Pétain, fin de la IIIe République.",
+          "niveau": 2
+        },
+        {
+          "date": "3 septembre 1939",
+          "evenement": "Déclaration de guerre de la France et du Royaume-Uni",
+          "contexte": "La France et le Royaume-Uni honorent leur alliance avec la Pologne.",
+          "niveau": 3
+        },
+        {
+          "date": "10 mai 1940",
+          "evenement": "Invasion de la France et des Pays-Bas",
+          "contexte": "Fin de la 'drôle de guerre', offensive éclair allemande (Blitzkrieg).",
+          "niveau": 3
+        },
+        {
+          "date": "16-17 juillet 1942",
+          "evenement": "Rafle du Vél d'Hiv",
+          "contexte": "La police française participe activement à la déportation de 13 000 Juifs, dont 4 000 enfants.",
+          "niveau": 2
+        },
+        {
+          "date": "2 février 1943",
+          "evenement": "Capitulation allemande à Stalingrad",
+          "contexte": "Première grande défaite allemande, tournant décisif de la guerre sur le front de l'Est.",
+          "niveau": 3
+        },
+        {
+          "date": "24 octobre 1940",
+          "evenement": "Entrevue de Montoire (Pétain-Hitler)",
+          "contexte": "Vichy choisit officiellement la voie de la collaboration avec l'Allemagne nazie.",
+          "niveau": 4
+        },
+        {
+          "date": "15 août 1944",
+          "evenement": "Débarquement en Provence",
+          "contexte": "Deuxième front en France, libération du Sud avec participation de troupes coloniales.",
+          "niveau": 4
+        },
+        {
+          "date": "27 janvier 1945",
+          "evenement": "Libération du camp d'Auschwitz",
+          "contexte": "Découverte de l'horreur des camps par l'Armée rouge, révélation du génocide au monde.",
+          "niveau": 3
+        }
+      ]
+    },
+    {
+      "numero": 3,
+      "titre": "Le monde depuis 1945 (Guerre froide et nouvel ordre mondial)",
+      "dates": [
+        {
+          "date": "1947",
+          "evenement": "Début de la Guerre froide",
+          "contexte": "Division du monde en deux blocs idéologiques antagonistes : capitalisme vs communisme.",
+          "niveau": 1
+        },
+        {
+          "date": "12 mars 1947",
+          "evenement": "Doctrine Truman (endiguement)",
+          "contexte": "Les USA s'engagent à contenir le communisme partout dans le monde, fondement de la politique américaine.",
+          "niveau": 1
+        },
+        {
+          "date": "9 novembre 1989",
+          "evenement": "Chute du mur de Berlin",
+          "contexte": "Chute du symbole de la division du monde, début de la réunification européenne.",
+          "niveau": 1
+        },
+        {
+          "date": "25 décembre 1991",
+          "evenement": "Dissolution de l'Union soviétique",
+          "contexte": "Fin de l'URSS et du monde bipolaire, les USA deviennent la seule superpuissance.",
+          "niveau": 1
+        },
+        {
+          "date": "11 septembre 2001",
+          "evenement": "Attentats aux États-Unis",
+          "contexte": "Attentats qui redéfinissent la géopolitique mondiale, début de la 'guerre contre le terrorisme'.",
+          "niveau": 1
+        },
+        {
+          "date": "5 juin 1947",
+          "evenement": "Plan Marshall",
+          "contexte": "Aide économique massive américaine pour reconstruire l'Europe et contrer l'influence soviétique.",
+          "niveau": 2
+        },
+        {
+          "date": "26 juin 1945",
+          "evenement": "Charte de l'ONU (San Francisco)",
+          "contexte": "Création d'une organisation internationale pour maintenir la paix, mais vite paralysée par le droit de veto.",
+          "niveau": 2
+        },
+        {
+          "date": "4 avril 1949",
+          "evenement": "Création de l'OTAN",
+          "contexte": "Alliance militaire occidentale face à la menace soviétique, pilier de la défense du bloc de l'Ouest.",
+          "niveau": 2
+        },
+        {
+          "date": "13 août 1961",
+          "evenement": "Construction du mur de Berlin",
+          "contexte": "Symbole physique de la division du monde, le Mur sépare familles et idéologies pendant 28 ans.",
+          "niveau": 2
+        },
+        {
+          "date": "24 juin 1948 - 12 mai 1949",
+          "evenement": "Blocus de Berlin",
+          "contexte": "Première grande crise de la Guerre froide, l'URSS bloque Berlin-Ouest, pont aérien américain.",
+          "niveau": 3
+        },
+        {
+          "date": "octobre 1962",
+          "evenement": "Crise des missiles de Cuba",
+          "contexte": "Le monde au bord de la guerre nucléaire, point culminant de la Guerre froide.",
+          "niveau": 2
+        },
+        {
+          "date": "25 juin 1950",
+          "evenement": "Début de la guerre de Corée",
+          "contexte": "Premier conflit armé de la Guerre froide, guerre par procuration entre les deux blocs.",
+          "niveau": 3
+        },
+        {
+          "date": "1er novembre 1954",
+          "evenement": "Toussaint rouge (début guerre d'Algérie)",
+          "contexte": "Début de la guerre d'indépendance algérienne, décolonisation par la violence.",
+          "niveau": 3
+        },
+        {
+          "date": "1975",
+          "evenement": "Accords d'Helsinki",
+          "contexte": "Accords de détente Est-Ouest, reconnaissance des frontières européennes et engagement sur les droits humains.",
+          "niveau": 4
+        },
+        {
+          "date": "3 octobre 1990",
+          "evenement": "Réunification allemande",
+          "contexte": "L'Allemagne réunifiée, symbole concret de la fin de la division Est-Ouest.",
+          "niveau": 3
+        },
+        {
+          "date": "1er juillet 1962",
+          "evenement": "Référendum d'indépendance de l'Algérie",
+          "contexte": "Fin de la guerre d'Algérie, indépendance après 132 ans de colonisation française.",
+          "niveau": 4
+        }
+      ]
+    },
+    {
+      "numero": 4,
+      "titre": "La France depuis 1945",
+      "dates": [
+        {
+          "date": "4 octobre 1958",
+          "evenement": "Promulgation de la Constitution de la Ve République",
+          "contexte": "Nouveau régime avec un exécutif fort, stabilité politique retrouvée après l'instabilité de la IVe.",
+          "niveau": 1
+        },
+        {
+          "date": "18 mars 1962",
+          "evenement": "Accords d'Évian",
+          "contexte": "Fin de la guerre d'Algérie après 8 ans de conflit, indépendance de l'Algérie.",
+          "niveau": 1
+        },
+        {
+          "date": "mai-juin 1968",
+          "evenement": "Mai 68 (grèves et manifestations)",
+          "contexte": "Crise sociale et culturelle majeure, remise en cause de la société gaulliste et des valeurs traditionnelles.",
+          "niveau": 1
+        },
+        {
+          "date": "10 mai 1981",
+          "evenement": "Élection de François Mitterrand",
+          "contexte": "Première alternance à gauche sous la Ve République, espoir de changement profond.",
+          "niveau": 2
+        },
+        {
+          "date": "13 mai 1958",
+          "evenement": "Crise du 13 mai à Alger",
+          "contexte": "Crise algérienne qui provoque la chute de la IVe République et le retour de De Gaulle au pouvoir.",
+          "niveau": 2
+        },
+        {
+          "date": "28 septembre 1958",
+          "evenement": "Référendum sur la Ve République",
+          "contexte": "Le peuple français approuve massivement (79%) la nouvelle constitution gaulliste.",
+          "niveau": 3
+        },
+        {
+          "date": "25 août 1944",
+          "evenement": "Libération de Paris",
+          "contexte": "De Gaulle impose l'idée d'une France libérée par elle-même, acte fondateur du gaullisme.",
+          "niveau": 2
+        },
+        {
+          "date": "21 avril 1944",
+          "evenement": "Droit de vote des femmes",
+          "contexte": "Ordonnance du GPRF accordant le droit de vote aux femmes, avancée démocratique majeure.",
+          "niveau": 2
+        },
+        {
+          "date": "13 octobre 1946",
+          "evenement": "Constitution de la IVe République",
+          "contexte": "Régime parlementaire qui sera marqué par l'instabilité gouvernementale (22 gouvernements en 12 ans).",
+          "niveau": 3
+        },
+        {
+          "date": "7 février 1992",
+          "evenement": "Traité de Maastricht",
+          "contexte": "La France s'engage dans l'intégration européenne, vers la citoyenneté européenne et la monnaie unique.",
+          "niveau": 2
+        },
+        {
+          "date": "28 octobre 1962",
+          "evenement": "Référendum sur l'élection au suffrage universel direct",
+          "contexte": "Le président sera élu directement par le peuple, renforcement majeur du pouvoir présidentiel.",
+          "niveau": 3
+        },
+        {
+          "date": "28 avril 1969",
+          "evenement": "Démission du général de Gaulle",
+          "contexte": "De Gaulle quitte le pouvoir après un référendum perdu, fin d'une époque politique.",
+          "niveau": 4
+        },
+        {
+          "date": "1986",
+          "evenement": "Première cohabitation (Mitterrand-Chirac)",
+          "contexte": "Président et Premier ministre de bords opposés, situation inédite sous la Ve République.",
+          "niveau": 3
+        },
+        {
+          "date": "21 avril 2002",
+          "evenement": "Le Pen au second tour de la présidentielle",
+          "contexte": "Choc politique, l'extrême droite au second tour pour la première fois, sursaut républicain au 2nd tour.",
+          "niveau": 4
+        },
+        {
+          "date": "1944-1946",
+          "evenement": "Gouvernement provisoire (GPRF)",
+          "contexte": "Reconstruction de l'État et grandes réformes : Sécurité sociale, nationalisations, droit de vote des femmes.",
+          "niveau": 3
+        }
+      ]
+    }
+  ]
+}

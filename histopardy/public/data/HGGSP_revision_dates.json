@@ -1,0 +1,540 @@
+{
+  "matiere": "HGGSP Terminale",
+  "description": "Dates clés pour flashcards - HGGSP (Géopolitique)",
+  "niveaux": {
+    "1": "Incontournable - à savoir absolument",
+    "2": "Important - très utile pour le bac",
+    "3": "Approfondissement - montre une bonne maîtrise",
+    "4": "Expert - pour se démarquer, pas indispensable"
+  },
+  "themes": [
+    {
+      "numero": 1,
+      "titre": "De nouveaux espaces de conquête",
+      "axes": [
+        {
+          "titre": "Axe 1 - Conquêtes, affirmations de puissance et rivalités",
+          "dates": [
+            {
+              "date": "4 octobre 1957",
+              "evenement": "Lancement de Spoutnik (1er satellite)",
+              "contexte": "En pleine Guerre froide, l'URSS prend l'avantage technologique et symbolique sur les USA dans la course spatiale.",
+              "niveau": 1
+            },
+            {
+              "date": "20 juillet 1969",
+              "evenement": "Premier pas sur la Lune (Armstrong, Apollo 11)",
+              "contexte": "Les USA remportent la course à la Lune, démonstration de puissance technologique face à l'URSS.",
+              "niveau": 1
+            },
+            {
+              "date": "12 avril 1961",
+              "evenement": "Vol de Youri Gagarine (1er homme dans l'espace)",
+              "contexte": "L'URSS envoie le premier homme en orbite, humiliation pour les Américains qui accélèrent leur programme.",
+              "niveau": 2
+            },
+            {
+              "date": "15 octobre 2003",
+              "evenement": "Yang Liwei, premier taïkonaute chinois",
+              "contexte": "La Chine devient la 3e puissance spatiale autonome, rupture du duopole USA/Russie.",
+              "niveau": 3
+            },
+            {
+              "date": "3 janvier 2019",
+              "evenement": "Chang'e 4 se pose sur la face cachée de la Lune",
+              "contexte": "Exploit inédit de la Chine, démonstration de ses ambitions spatiales croissantes.",
+              "niveau": 4
+            },
+            {
+              "date": "20 décembre 2019",
+              "evenement": "Création de l'US Space Force",
+              "contexte": "L'espace devient officiellement un domaine militaire pour les USA, nouvelle course aux armements.",
+              "niveau": 3
+            },
+            {
+              "date": "23 août 2023",
+              "evenement": "Alunissage de Chandrayaan-3 (Inde)",
+              "contexte": "L'Inde rejoint le club des puissances lunaires, affirmation du Sud global dans l'espace.",
+              "niveau": 4
+            },
+            {
+              "date": "25 mai 1961",
+              "evenement": "Discours de Kennedy 'We choose to go to the Moon'",
+              "contexte": "Kennedy engage les USA dans la course à la Lune comme démonstration de supériorité sur l'URSS.",
+              "niveau": 4
+            }
+          ]
+        },
+        {
+          "titre": "Axe 2 - Enjeux diplomatiques et coopérations",
+          "dates": [
+            {
+              "date": "27 janvier 1967",
+              "evenement": "Traité de l'espace (Outer Space Treaty)",
+              "contexte": "Traité fondateur du droit spatial : l'espace déclaré 'patrimoine commun de l'humanité', armes nucléaires interdites.",
+              "niveau": 1
+            },
+            {
+              "date": "20 novembre 1998",
+              "evenement": "Lancement du 1er module de l'ISS (Zarya)",
+              "contexte": "Plus grand projet de coopération spatiale internationale, 16 pays associés dont USA et Russie.",
+              "niveau": 2
+            },
+            {
+              "date": "17 juillet 1975",
+              "evenement": "Mission Apollo-Soyouz",
+              "contexte": "En pleine Détente, astronautes américains et cosmonautes soviétiques s'amarrent en orbite, symbole de coopération.",
+              "niveau": 3
+            },
+            {
+              "date": "16 novembre 2022",
+              "evenement": "Lancement d'Artemis I",
+              "contexte": "La NASA relance l'exploration lunaire avec des partenaires internationaux, retour vers la Lune.",
+              "niveau": 4
+            }
+          ]
+        },
+        {
+          "titre": "Objet conclusif - Les fonds marins",
+          "dates": [
+            {
+              "date": "10 décembre 1982",
+              "evenement": "Convention de Montego Bay (CNUDM)",
+              "contexte": "'Constitution des océans' : cadre juridique international, les fonds marins déclarés patrimoine commun de l'humanité.",
+              "niveau": 1
+            },
+            {
+              "date": "19 juin 2023",
+              "evenement": "Traité BBNJ sur la haute mer",
+              "contexte": "Après 20 ans de négociations, premier traité pour protéger la biodiversité en haute mer.",
+              "niveau": 3
+            },
+            {
+              "date": "16 novembre 1994",
+              "evenement": "Entrée en vigueur de la Convention de Montego Bay",
+              "contexte": "Création de l'Autorité internationale des fonds marins pour réguler l'exploitation.",
+              "niveau": 3
+            },
+            {
+              "date": "2014",
+              "evenement": "Premières explorations industrielles des fonds marins",
+              "contexte": "Les progrès technologiques rendent possible l'exploitation minière des abysses, enjeux économiques et écologiques.",
+              "niveau": 4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "numero": 2,
+      "titre": "Faire la guerre, faire la paix",
+      "axes": [
+        {
+          "titre": "Axe 1 - La guerre, un phénomène en mutation",
+          "dates": [
+            {
+              "date": "11 septembre 2001",
+              "evenement": "Attentats aux États-Unis (World Trade Center)",
+              "contexte": "Attentats qui redéfinissent la géopolitique mondiale, début de la 'guerre contre le terrorisme'.",
+              "niveau": 1
+            },
+            {
+              "date": "24 février 2022",
+              "evenement": "Invasion de l'Ukraine par la Russie",
+              "contexte": "Retour de la guerre interétatique de haute intensité en Europe, bouleversement géopolitique majeur.",
+              "niveau": 1
+            },
+            {
+              "date": "20 mars 2003",
+              "evenement": "Début de la guerre en Irak",
+              "contexte": "Intervention américaine sans mandat ONU, la France s'y oppose (discours de Villepin, 14 février 2003).",
+              "niveau": 2
+            },
+            {
+              "date": "17 janvier 1991",
+              "evenement": "Guerre du Golfe (opération Tempête du désert)",
+              "contexte": "Première guerre 'en direct' à la télévision, coalition de 35 pays autorisée par l'ONU.",
+              "niveau": 2
+            },
+            {
+              "date": "7 avril - 17 juillet 1994",
+              "evenement": "Génocide des Tutsis au Rwanda",
+              "contexte": "Génocide de ~800 000 personnes en 100 jours, la communauté internationale laisse faire.",
+              "niveau": 2
+            },
+            {
+              "date": "7 octobre 2001",
+              "evenement": "Début de la guerre en Afghanistan",
+              "contexte": "Les USA interviennent pour traquer Al-Qaïda, début de la plus longue guerre américaine (20 ans).",
+              "niveau": 3
+            },
+            {
+              "date": "29 juin 2014",
+              "evenement": "Proclamation du 'califat' par Daech",
+              "contexte": "Un groupe djihadiste proclame un 'État' sur des territoires en Irak et Syrie, nouvelle forme de menace.",
+              "niveau": 3
+            }
+          ]
+        },
+        {
+          "titre": "Axe 2 - Construire la paix",
+          "dates": [
+            {
+              "date": "26 juin 1945",
+              "evenement": "Signature de la Charte de l'ONU (San Francisco)",
+              "contexte": "Création d'une organisation mondiale pour la paix, mais le droit de veto des 5 grands la paralysera souvent.",
+              "niveau": 1
+            },
+            {
+              "date": "17 juillet 1998",
+              "evenement": "Statut de Rome (création de la CPI)",
+              "contexte": "Juridiction pénale internationale permanente pour juger génocides et crimes de guerre, sans adhésion de toutes les grandes puissances.",
+              "niveau": 2
+            },
+            {
+              "date": "10 décembre 1948",
+              "evenement": "Déclaration universelle des droits de l'Homme",
+              "contexte": "Texte fondateur des droits humains, non contraignant mais référence universelle.",
+              "niveau": 2
+            },
+            {
+              "date": "17 juin 1992",
+              "evenement": "Agenda pour la paix (Boutros Boutros-Ghali)",
+              "contexte": "Nouvelle doctrine ONU post-Guerre froide : prévention, résolution et consolidation de la paix.",
+              "niveau": 3
+            },
+            {
+              "date": "septembre 2005",
+              "evenement": "Adoption de la 'Responsabilité de protéger' (R2P)",
+              "contexte": "La souveraineté n'est plus un bouclier absolu : un État qui ne protège pas sa population peut être contré.",
+              "niveau": 3
+            },
+            {
+              "date": "1949",
+              "evenement": "Premières opérations de maintien de la paix (Casques bleus)",
+              "contexte": "L'ONU se dote d'un outil militaire pour s'interposer dans les conflits.",
+              "niveau": 4
+            }
+          ]
+        },
+        {
+          "titre": "Objet conclusif - Le Moyen-Orient",
+          "dates": [
+            {
+              "date": "14 mai 1948",
+              "evenement": "Proclamation de l'État d'Israël",
+              "contexte": "Création d'un État juif en Palestine, rejet immédiat par les pays arabes voisins, début d'un conflit durable.",
+              "niveau": 1
+            },
+            {
+              "date": "17 décembre 2010",
+              "evenement": "Début du Printemps arabe (Tunisie)",
+              "contexte": "Immolation de Mohamed Bouazizi, étincelle de soulèvements populaires dans tout le monde arabe.",
+              "niveau": 1
+            },
+            {
+              "date": "7 octobre 2023",
+              "evenement": "Attaque du Hamas et guerre à Gaza",
+              "contexte": "Attaque meurtrière du Hamas contre Israël, déclenchement d'une offensive majeure sur Gaza.",
+              "niveau": 1
+            },
+            {
+              "date": "5-10 juin 1967",
+              "evenement": "Guerre des Six Jours",
+              "contexte": "Israël conquiert Jérusalem-Est, Cisjordanie, Gaza, Sinaï et Golan en 6 jours.",
+              "niveau": 2
+            },
+            {
+              "date": "6-25 octobre 1973",
+              "evenement": "Guerre du Kippour et 1er choc pétrolier",
+              "contexte": "Attaque surprise contre Israël suivie d'un embargo pétrolier qui paralyse l'économie occidentale.",
+              "niveau": 2
+            },
+            {
+              "date": "11 février 1979",
+              "evenement": "Révolution islamique en Iran",
+              "contexte": "Chute du Shah, instauration d'une théocratie chiite, nouveau modèle politique islamiste au Moyen-Orient.",
+              "niveau": 2
+            },
+            {
+              "date": "13 septembre 1993",
+              "evenement": "Accords d'Oslo",
+              "contexte": "Poignée de main Rabin-Arafat à Washington, reconnaissance mutuelle Israël-OLP, espoir vite déçu.",
+              "niveau": 2
+            },
+            {
+              "date": "15 mars 2011",
+              "evenement": "Début de la guerre civile en Syrie",
+              "contexte": "Le soulèvement syrien dégénère en guerre civile internationalisée, des millions de réfugiés.",
+              "niveau": 3
+            },
+            {
+              "date": "22 septembre 1980",
+              "evenement": "Début de la guerre Iran-Irak",
+              "contexte": "Conflit de 8 ans entre deux puissances régionales, environ 1 million de morts.",
+              "niveau": 3
+            },
+            {
+              "date": "20 mars 2003",
+              "evenement": "Invasion de l'Irak par les USA",
+              "contexte": "Intervention qui déstabilise durablement la région et favorise l'émergence de Daech.",
+              "niveau": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "numero": 3,
+      "titre": "Histoire et mémoires",
+      "axes": [
+        {
+          "titre": "Axe 1 - Usages et enjeux des mémoires",
+          "dates": [
+            {
+              "date": "16 juillet 1995",
+              "evenement": "Discours de Chirac au Vél d'Hiv",
+              "contexte": "Rupture historique : l'État français reconnaît officiellement sa responsabilité dans la déportation des Juifs.",
+              "niveau": 1
+            },
+            {
+              "date": "1945-1970s",
+              "evenement": "Période du 'résistancialisme'",
+              "contexte": "De Gaulle construit le mythe d'une France unanimement résistante pour unifier le pays après la guerre.",
+              "niveau": 2
+            },
+            {
+              "date": "1969",
+              "evenement": "'Le Chagrin et la Pitié' (Marcel Ophüls)",
+              "contexte": "Film documentaire qui brise le tabou en montrant la collaboration ordinaire des Français sous l'Occupation.",
+              "niveau": 3
+            },
+            {
+              "date": "1984-1992",
+              "evenement": "Publication des 'Lieux de mémoire' (Pierre Nora)",
+              "contexte": "Pierre Nora conceptualise monuments, dates et symboles comme 'cristallisations' de la mémoire nationale.",
+              "niveau": 3
+            },
+            {
+              "date": "1978",
+              "evenement": "Réédition de 'La mémoire collective' (Halbwachs)",
+              "contexte": "Redécouverte de la notion de mémoire collective comme objet d'étude distinct de l'histoire.",
+              "niveau": 4
+            }
+          ]
+        },
+        {
+          "titre": "Axe 2 - Mémoires et justice",
+          "dates": [
+            {
+              "date": "20 novembre 1945",
+              "evenement": "Ouverture du procès de Nuremberg",
+              "contexte": "Premier tribunal pénal international, invention juridique du 'crime contre l'humanité'.",
+              "niveau": 1
+            },
+            {
+              "date": "11 avril 1961",
+              "evenement": "Procès Eichmann à Jérusalem",
+              "contexte": "Procès qui relance la mémoire mondiale de la Shoah et inspire Hannah Arendt ('banalité du mal').",
+              "niveau": 1
+            },
+            {
+              "date": "1er juillet 2002",
+              "evenement": "Entrée en fonction de la CPI",
+              "contexte": "Première juridiction pénale internationale permanente, compétente pour génocide, crimes de guerre et crimes contre l'humanité.",
+              "niveau": 2
+            },
+            {
+              "date": "11 mai 1987",
+              "evenement": "Procès Klaus Barbie",
+              "contexte": "Premier Français jugé pour crimes contre l'humanité, le 'boucher de Lyon'.",
+              "niveau": 3
+            },
+            {
+              "date": "8 octobre 1997",
+              "evenement": "Procès Maurice Papon",
+              "contexte": "Haut fonctionnaire de Vichy jugé pour complicité dans la déportation de Juifs bordelais.",
+              "niveau": 4
+            },
+            {
+              "date": "20 avril 1994",
+              "evenement": "Procès Paul Touvier",
+              "contexte": "Ancien milicien de Vichy jugé pour complicité de crimes contre l'humanité.",
+              "niveau": 4
+            }
+          ]
+        },
+        {
+          "titre": "Objet conclusif - Mémoire de la Seconde Guerre mondiale en France",
+          "dates": [
+            {
+              "date": "25 août 1944",
+              "evenement": "Libération de Paris",
+              "contexte": "De Gaulle descend les Champs-Élysées, affirmant 'Paris libéré par lui-même', construction du récit national.",
+              "niveau": 1
+            },
+            {
+              "date": "16 juillet 1995",
+              "evenement": "Discours de Chirac (rafle du Vél d'Hiv)",
+              "contexte": "Fin officielle du mythe résistancialiste : l'État assume publiquement les crimes de Vichy.",
+              "niveau": 1
+            },
+            {
+              "date": "26 décembre 1964",
+              "evenement": "Imprescriptibilité des crimes contre l'humanité",
+              "contexte": "Loi permettant de juger les criminels nazis sans limite de temps, outil juridique essentiel.",
+              "niveau": 2
+            },
+            {
+              "date": "13 juillet 1990",
+              "evenement": "Loi Gayssot",
+              "contexte": "La France se dote d'un arsenal juridique pour combattre et réprimer le négationnisme.",
+              "niveau": 3
+            },
+            {
+              "date": "12-14 février 1953",
+              "evenement": "Procès d'Oradour-sur-Glane",
+              "contexte": "Procès des 'Malgré-nous' alsaciens enrôlés de force, fracture mémorielle entre Alsace et Limousin.",
+              "niveau": 4
+            },
+            {
+              "date": "18 janvier 2007",
+              "evenement": "Cérémonie au Panthéon pour les Justes de France",
+              "contexte": "Reconnaissance nationale des Justes qui ont sauvé des Juifs pendant l'Occupation.",
+              "niveau": 4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "numero": 5,
+      "titre": "L'environnement, entre exploitation et protection",
+      "axes": [
+        {
+          "titre": "Axe 1 - Exploitation et pression sur les ressources",
+          "dates": [
+            {
+              "date": "mars 1972",
+              "evenement": "Rapport Meadows 'Halte à la croissance'",
+              "contexte": "Premier cri d'alarme scientifique : la croissance infinie est impossible dans un monde aux ressources finies.",
+              "niveau": 1
+            },
+            {
+              "date": "1987",
+              "evenement": "Rapport Brundtland",
+              "contexte": "Définition du développement durable : 'répondre aux besoins du présent sans compromettre ceux des générations futures'.",
+              "niveau": 1
+            },
+            {
+              "date": "26 avril 1986",
+              "evenement": "Catastrophe de Tchernobyl",
+              "contexte": "Plus grave accident nucléaire de l'histoire (niveau 7), nuage radioactif sur l'Europe.",
+              "niveau": 2
+            },
+            {
+              "date": "11 mars 2011",
+              "evenement": "Catastrophe de Fukushima",
+              "contexte": "Tsunami et catastrophe nucléaire au Japon, l'Allemagne accélère sa sortie du nucléaire.",
+              "niveau": 3
+            },
+            {
+              "date": "2022",
+              "evenement": "6e rapport du GIEC",
+              "contexte": "Le GIEC confirme que le réchauffement est 'sans équivoque' d'origine humaine, chaque dixième de degré compte.",
+              "niveau": 3
+            },
+            {
+              "date": "20 avril 2010",
+              "evenement": "Catastrophe Deepwater Horizon",
+              "contexte": "Marée noire géante dans le Golfe du Mexique, symbole des risques de l'extraction offshore.",
+              "niveau": 4
+            }
+          ]
+        },
+        {
+          "titre": "Axe 2 - Protection et gouvernance",
+          "dates": [
+            {
+              "date": "3-14 juin 1992",
+              "evenement": "Sommet de la Terre (Rio de Janeiro)",
+              "contexte": "Sommet fondateur de la gouvernance environnementale mondiale, naissance des COP et de l'Agenda 21.",
+              "niveau": 1
+            },
+            {
+              "date": "12 décembre 2015",
+              "evenement": "Accord de Paris (COP21)",
+              "contexte": "195 pays s'engagent à limiter le réchauffement à +1.5°C, accord historique et universel.",
+              "niveau": 1
+            },
+            {
+              "date": "11 décembre 1997",
+              "evenement": "Protocole de Kyoto",
+              "contexte": "Premier accord contraignant de réduction des GES, mais les USA ne le ratifient pas.",
+              "niveau": 2
+            },
+            {
+              "date": "5-16 juin 1972",
+              "evenement": "Conférence de Stockholm",
+              "contexte": "Première conférence mondiale sur l'environnement, création du PNUE.",
+              "niveau": 3
+            },
+            {
+              "date": "1er juin 2017",
+              "evenement": "Retrait américain de l'Accord de Paris",
+              "contexte": "Trump retire les USA de l'Accord de Paris, fragilisant la coopération climatique mondiale.",
+              "niveau": 3
+            },
+            {
+              "date": "15 mars 2019",
+              "evenement": "Première grève mondiale pour le climat",
+              "contexte": "1,4 million de jeunes dans 123 pays font grève pour le climat (Fridays for Future).",
+              "niveau": 3
+            },
+            {
+              "date": "19 décembre 2022",
+              "evenement": "COP15 Biodiversité (Cadre de Kunming-Montréal)",
+              "contexte": "Accord pour protéger 30% de la biodiversité terrestre et marine d'ici 2030.",
+              "niveau": 4
+            }
+          ]
+        },
+        {
+          "titre": "Objet conclusif - L'Amazonie",
+          "dates": [
+            {
+              "date": "1964",
+              "evenement": "Début de la colonisation de l'Amazonie",
+              "contexte": "Le régime militaire brésilien lance la colonisation massive : 'intégrer pour ne pas livrer'.",
+              "niveau": 2
+            },
+            {
+              "date": "août 2019",
+              "evenement": "Crise des incendies en Amazonie",
+              "contexte": "Incendies records qui provoquent une crise diplomatique mondiale, Bolsonaro critiqué internationalement.",
+              "niveau": 2
+            },
+            {
+              "date": "22 décembre 1988",
+              "evenement": "Meurtre de Chico Mendes",
+              "contexte": "Assassinat d'un syndicaliste écologiste, symbole mondial de la lutte contre la déforestation.",
+              "niveau": 3
+            },
+            {
+              "date": "2004",
+              "evenement": "PPCDAm (Plan brésilien contre la déforestation)",
+              "contexte": "Plan ambitieux qui réussit à réduire la déforestation de 80% en dix ans.",
+              "niveau": 4
+            },
+            {
+              "date": "janvier 2023",
+              "evenement": "Retour de Lula et relance des politiques environnementales",
+              "contexte": "Le nouveau gouvernement brésilien s'engage vers 'zéro déforestation' d'ici 2030.",
+              "niveau": 4
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
