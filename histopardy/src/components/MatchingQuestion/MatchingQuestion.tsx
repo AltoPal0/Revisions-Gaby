@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { MatchingPair, MatchingQuestionState, NormalizedDate } from '../../types';
+import EventContextSheet from '../ui/EventContextSheet';
 
 interface MatchingQuestionProps {
   initialState: MatchingQuestionState;
@@ -23,6 +24,7 @@ export default function MatchingQuestion({
   const [phase, setPhase] = useState<'playing' | 'validated'>('playing');
   const [score, setScore] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
+  const [sheetNd, setSheetNd] = useState<NormalizedDate | null>(null);
 
   const theme = dates[0]?.theme ?? '';
   const allMatched = pairs.every(p => p.matched);
@@ -78,6 +80,12 @@ export default function MatchingQuestion({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
+      {/* Sheet de contexte pour les événements après validation */}
+      <EventContextSheet
+        nd={sheetNd!}
+        open={sheetNd !== null}
+        onClose={() => setSheetNd(null)}
+      />
       {/* Bandeau header */}
       <div style={{
         margin: '12px 16px 0',
@@ -116,8 +124,14 @@ export default function MatchingQuestion({
               transition={{ duration: 0.4 }}
             >
               <button
-                onClick={() => handleEventTap(i)}
-                disabled={phase !== 'playing'}
+                onClick={() => {
+                  if (phase === 'validated') {
+                    const nd = dates.find(d => d.id === pair.dateId);
+                    if (nd) setSheetNd(nd);
+                  } else {
+                    handleEventTap(i);
+                  }
+                }}
                 style={{
                   width: '100%',
                   minHeight: 72,
@@ -129,7 +143,7 @@ export default function MatchingQuestion({
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   gap: 10,
-                  cursor: phase !== 'playing' ? 'default' : 'pointer',
+                  cursor: 'pointer',
                   textAlign: 'left',
                   transition: 'background 0.15s, border-color 0.15s',
                 }}

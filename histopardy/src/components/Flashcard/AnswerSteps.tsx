@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import type { FlashcardState, NormalizedDate, AnswerResult } from '../../types';
 import QuestionModifierModal from '../ui/QuestionModifierModal';
 import ContextMCQ from './ContextMCQ';
+import EventContextSheet from '../ui/EventContextSheet';
 
 const MOIS_FULL = ['', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
   'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
@@ -20,6 +21,7 @@ interface AnswerStepsProps {
 
 export default function AnswerSteps({ card, nd, playerId, onAnswerContext, onAnswerYear, onAnswerMonth, onAnswerDay }: AnswerStepsProps) {
   const [shakeKey, setShakeKey] = useState(0);
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   useEffect(() => {
     if (card.yearResult === 'wrong' || card.monthResult === 'wrong' || card.dayResult === 'wrong') {
@@ -34,35 +36,14 @@ export default function AnswerSteps({ card, nd, playerId, onAnswerContext, onAns
     (!nd.date.hasMonth || card.monthResult === 'correct') &&
     (!nd.date.hasDay || card.dayResult === 'correct');
 
+  const openSheet = () => setSheetOpen(true);
+
   // === État complété ===
   if (card.completed) {
     if (allGood) {
-      return (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          style={{
-            background: 'rgba(46, 204, 113, 0.1)',
-            border: '1px solid var(--green)',
-            borderRadius: 'var(--radius)',
-            padding: '18px 16px',
-            textAlign: 'center',
-          }}
-        >
-          <div style={{ fontSize: '1.8rem', marginBottom: 6 }}>🎉</div>
-          <div style={{ color: 'var(--green)', fontWeight: 800, fontSize: '1.1rem' }}>Parfait !</div>
-          <div style={{ color: 'var(--text)', fontWeight: 700, fontSize: '1rem', marginTop: 6 }}>
-            {nd.evenement}
-          </div>
-          <div style={{ color: 'var(--text-dim)', fontSize: '0.85rem', marginTop: 4 }}>
-            {nd.date.raw}
-          </div>
-        </motion.div>
-      );
+      return <SuccessPanel nd={nd} />;
     }
-
-    // === Réponse fausse : panel éducatif ===
-    // isContextOnly + contexte raté → panel simplifié (pas de date à montrer)
+    // isContextOnly + contexte raté → panel simplifié
     // isContextOnly + contexte ok mais date ratée → panel complet
     if (card.isContextOnly && card.contextResult === 'wrong') {
       return <ContextWrongPanel nd={nd} />;
@@ -73,116 +54,183 @@ export default function AnswerSteps({ card, nd, playerId, onAnswerContext, onAns
   // === Étape contexte (question de type 'context') ===
   if (card.contextStep && card.contextChoices) {
     return (
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-        <ContextMCQ
-          contexte={nd.contexte}
-          choices={card.contextChoices}
-          onAnswer={onAnswerContext}
-          disabled={card.contextResult !== null && card.contextResult !== undefined}
-          correctEvenement={card.contextResult !== null && card.contextResult !== undefined ? nd.evenement : undefined}
-        />
-      </motion.div>
+      <>
+        <EventContextSheet nd={nd} open={sheetOpen} onClose={() => setSheetOpen(false)} />
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+          <ContextMCQ
+            contexte={nd.contexte}
+            choices={card.contextChoices}
+            onAnswer={onAnswerContext}
+            disabled={card.contextResult !== null && card.contextResult !== undefined}
+            correctEvenement={card.contextResult !== null && card.contextResult !== undefined ? nd.evenement : undefined}
+            onContextTap={card.contextResult !== null ? openSheet : undefined}
+          />
+        </motion.div>
+      </>
     );
   }
 
-  // === Étapes de réponse ===
+  // === Étapes de réponse (année / mois / jour) ===
   return (
-    <div style={{ width: '100%' }}>
-      {/* Badge bonus contexte réussi */}
-      {card.contextResult === 'correct' && (
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 6,
-          marginBottom: 10,
-          padding: '6px 10px',
-          background: 'rgba(78,140,232,0.1)',
-          border: '1px solid rgba(78,140,232,0.3)',
-          borderRadius: 'var(--radius-sm)',
-          fontSize: '0.78rem',
-          color: '#4e8ce8',
-          fontWeight: 700,
-        }}>
-          ✓ Contexte trouvé · Trouve la date pour {card.isContextOnly ? '×1.5' : '×2'}
-        </div>
-      )}
-      <AnimatePresence mode="wait">
-        {card.currentStep === 'year' && (
-          <motion.div key="year" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-            <StepLabel label="Quelle année ?" result={card.yearResult} />
-            <ChoiceGrid choices={card.yearChoices} onSelect={onAnswerYear} disabled={card.yearResult !== null} correctValue={nd.date.year} />
-          </motion.div>
+    <>
+      <EventContextSheet nd={nd} open={sheetOpen} onClose={() => setSheetOpen(false)} />
+      <div style={{ width: '100%' }}>
+        {/* Badge bonus contexte réussi */}
+        {card.contextResult === 'correct' && (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            marginBottom: 10,
+            padding: '6px 10px',
+            background: 'rgba(78,140,232,0.1)',
+            border: '1px solid rgba(78,140,232,0.3)',
+            borderRadius: 'var(--radius-sm)',
+            fontSize: '0.78rem',
+            color: '#4e8ce8',
+            fontWeight: 700,
+          }}>
+            ✓ Contexte trouvé · Trouve la date pour {card.isContextOnly ? '×1.5' : '×2'}
+          </div>
         )}
-        {card.currentStep === 'month' && (
-          <motion.div key="month" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-            <StepLabel label="Quel mois ?" result={card.monthResult} />
-            <MonthGrid onSelect={onAnswerMonth} disabled={card.monthResult !== null} />
-          </motion.div>
-        )}
-        {card.currentStep === 'day' && (
-          <motion.div key="day" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-            <StepLabel label="Quel jour ?" result={card.dayResult} />
-            <ChoiceGrid choices={card.dayChoices ?? []} onSelect={onAnswerDay} disabled={card.dayResult !== null} correctValue={nd.date.day} />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+        <AnimatePresence mode="wait">
+          {card.currentStep === 'year' && (
+            <motion.div key="year" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+              <StepLabel label="Quelle année ?" result={card.yearResult} />
+              <ChoiceGrid
+                choices={card.yearChoices}
+                onSelect={onAnswerYear}
+                disabled={card.yearResult !== null}
+                correctValue={nd.date.year}
+                onContextTap={card.yearResult !== null ? openSheet : undefined}
+              />
+            </motion.div>
+          )}
+          {card.currentStep === 'month' && (
+            <motion.div key="month" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+              <StepLabel label="Quel mois ?" result={card.monthResult} />
+              <MonthGrid
+                onSelect={onAnswerMonth}
+                disabled={card.monthResult !== null}
+                onContextTap={card.monthResult !== null ? openSheet : undefined}
+              />
+            </motion.div>
+          )}
+          {card.currentStep === 'day' && (
+            <motion.div key="day" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+              <StepLabel label="Quel jour ?" result={card.dayResult} />
+              <ChoiceGrid
+                choices={card.dayChoices ?? []}
+                onSelect={onAnswerDay}
+                disabled={card.dayResult !== null}
+                correctValue={nd.date.day}
+                onContextTap={card.dayResult !== null ? openSheet : undefined}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </>
   );
 }
 
-// ===== Panel simplifié pour mauvaise réponse contexte-only =====
-function ContextWrongPanel({ nd }: { nd: NormalizedDate }) {
+// ===== Panneau succès =====
+function SuccessPanel({ nd }: { nd: NormalizedDate }) {
+  const [sheetOpen, setSheetOpen] = useState(false);
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      style={{
-        background: 'rgba(231, 76, 60, 0.06)',
-        border: '1px solid rgba(231, 76, 60, 0.4)',
-        borderRadius: 'var(--radius)',
-        overflow: 'hidden',
-      }}
-    >
-      <div style={{
-        background: 'rgba(231, 76, 60, 0.15)',
-        padding: '12px 16px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 10,
-        borderBottom: '1px solid rgba(231, 76, 60, 0.2)',
-      }}>
-        <span style={{ fontSize: '1.2rem' }}>❌</span>
-        <span style={{ color: 'var(--red)', fontWeight: 800, fontSize: '0.95rem' }}>
-          La bonne réponse était
-        </span>
-      </div>
-      <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-        <div style={{ fontWeight: 800, color: 'var(--text)', fontSize: '1rem' }}>
+    <>
+      <EventContextSheet nd={nd} open={sheetOpen} onClose={() => setSheetOpen(false)} />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        onClick={() => setSheetOpen(true)}
+        style={{
+          background: 'rgba(46, 204, 113, 0.1)',
+          border: '1px solid var(--green)',
+          borderRadius: 'var(--radius)',
+          padding: '18px 16px',
+          textAlign: 'center',
+          cursor: 'pointer',
+          position: 'relative',
+        }}
+      >
+        <div style={{ position: 'absolute', top: 8, right: 10, fontSize: '0.7rem', color: 'var(--green)', opacity: 0.6, fontWeight: 700 }}>
+          ℹ contexte
+        </div>
+        <div style={{ fontSize: '1.8rem', marginBottom: 6 }}>🎉</div>
+        <div style={{ color: 'var(--green)', fontWeight: 800, fontSize: '1.1rem' }}>Parfait !</div>
+        <div style={{ color: 'var(--text)', fontWeight: 700, fontSize: '1rem', marginTop: 6 }}>
           {nd.evenement}
         </div>
-        <div style={{
-          borderTop: '1px solid var(--border)',
-          paddingTop: 10,
-          fontSize: '0.82rem',
-          color: 'var(--text-dim)',
-          lineHeight: 1.5,
-        }}>
-          {nd.contexte}
+        <div style={{ color: 'var(--text-dim)', fontSize: '0.85rem', marginTop: 4 }}>
+          {nd.date.raw}
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </>
+  );
+}
+
+// ===== Panel simplifié pour mauvaise réponse contexte-only (contexte raté) =====
+function ContextWrongPanel({ nd }: { nd: NormalizedDate }) {
+  const [sheetOpen, setSheetOpen] = useState(false);
+  return (
+    <>
+      <EventContextSheet nd={nd} open={sheetOpen} onClose={() => setSheetOpen(false)} />
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        onClick={() => setSheetOpen(true)}
+        style={{
+          background: 'rgba(231, 76, 60, 0.06)',
+          border: '1px solid rgba(231, 76, 60, 0.4)',
+          borderRadius: 'var(--radius)',
+          overflow: 'hidden',
+          cursor: 'pointer',
+          position: 'relative',
+        }}
+      >
+        <div style={{ position: 'absolute', top: 8, right: 10, fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700 }}>
+          ℹ contexte
+        </div>
+        <div style={{
+          background: 'rgba(231, 76, 60, 0.15)',
+          padding: '12px 16px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10,
+          borderBottom: '1px solid rgba(231, 76, 60, 0.2)',
+        }}>
+          <span style={{ fontSize: '1.2rem' }}>❌</span>
+          <span style={{ color: 'var(--red)', fontWeight: 800, fontSize: '0.95rem' }}>
+            La bonne réponse était
+          </span>
+        </div>
+        <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div style={{ fontWeight: 800, color: 'var(--text)', fontSize: '1rem' }}>
+            {nd.evenement}
+          </div>
+          <div style={{
+            borderTop: '1px solid var(--border)',
+            paddingTop: 10,
+            fontSize: '0.82rem',
+            color: 'var(--text-dim)',
+            lineHeight: 1.5,
+          }}>
+            {nd.contexte}
+          </div>
+        </div>
+      </motion.div>
+    </>
   );
 }
 
 // ===== Panel éducatif pour mauvaise réponse =====
 function WrongAnswerPanel({ card, nd, shakeKey, playerId }: { card: FlashcardState; nd: NormalizedDate; shakeKey: number; playerId: string }) {
   const [modifierOpen, setModifierOpen] = useState(false);
-  // Construire un résumé de ce qui était juste et faux
   const yearWrong = card.yearResult === 'wrong';
   const monthWrong = card.monthResult === 'wrong';
   const dayWrong = card.dayResult === 'wrong';
 
-  // Construire la date complète formatée
   const dateParts: { label: string; value: string; status: 'correct' | 'wrong' | 'na' }[] = [];
 
   if (nd.date.hasDay && nd.date.day !== undefined) {
@@ -206,7 +254,6 @@ function WrongAnswerPanel({ card, nd, shakeKey, playerId }: { card: FlashcardSta
         overflow: 'hidden',
       }}
     >
-      {/* Modal modificateur de précision */}
       <QuestionModifierModal
         open={modifierOpen}
         onClose={() => setModifierOpen(false)}
@@ -248,7 +295,6 @@ function WrongAnswerPanel({ card, nd, shakeKey, playerId }: { card: FlashcardSta
       </div>
 
       <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 14 }}>
-        {/* Date complète bien mise en valeur */}
         <div style={{
           textAlign: 'center',
           background: 'rgba(0,0,0,0.2)',
@@ -260,7 +306,6 @@ function WrongAnswerPanel({ card, nd, shakeKey, playerId }: { card: FlashcardSta
           </div>
         </div>
 
-        {/* Détail par étape : vert = correct, rouge = raté */}
         {dateParts.length > 1 && (
           <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
             {dateParts.map(({ label, value, status }) => (
@@ -289,11 +334,7 @@ function WrongAnswerPanel({ card, nd, shakeKey, playerId }: { card: FlashcardSta
           </div>
         )}
 
-        {/* Rappel du contexte */}
-        <div style={{
-          borderTop: '1px solid var(--border)',
-          paddingTop: 12,
-        }}>
+        <div style={{ borderTop: '1px solid var(--border)', paddingTop: 12 }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>
             À retenir
           </div>
@@ -318,16 +359,20 @@ function StepLabel({ label, result }: { label: string; result: AnswerResult }) {
   );
 }
 
-function ChoiceGrid({ choices, onSelect, disabled, correctValue }: {
+function ChoiceGrid({ choices, onSelect, disabled, correctValue, onContextTap }: {
   choices: number[];
   onSelect: (v: number) => void;
   disabled: boolean;
   correctValue?: number;
+  onContextTap?: () => void;
 }) {
   const [selected, setSelected] = useState<number | null>(null);
 
-  function handleSelect(v: number) {
-    if (disabled) return;
+  function handleClick(v: number) {
+    if (disabled) {
+      onContextTap?.();
+      return;
+    }
     setSelected(v);
     onSelect(v);
   }
@@ -341,8 +386,8 @@ function ChoiceGrid({ choices, onSelect, disabled, correctValue }: {
         return (
           <motion.button
             key={c}
-            whileTap={!disabled ? { scale: 0.95 } : {}}
-            onClick={() => handleSelect(c)}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => handleClick(c)}
             style={{
               minHeight: 52,
               background: isCorrect ? 'rgba(46,204,113,0.15)' : isWrong ? 'rgba(231,76,60,0.15)' : 'var(--bg-card)',
@@ -351,7 +396,7 @@ function ChoiceGrid({ choices, onSelect, disabled, correctValue }: {
               color: isCorrect ? 'var(--green)' : isWrong ? 'var(--red)' : 'var(--text)',
               fontSize: '1.1rem',
               fontWeight: 700,
-              cursor: disabled ? 'default' : 'pointer',
+              cursor: 'pointer',
               transition: 'all 0.15s ease',
             }}
           >
@@ -365,7 +410,19 @@ function ChoiceGrid({ choices, onSelect, disabled, correctValue }: {
   );
 }
 
-function MonthGrid({ onSelect, disabled }: { onSelect: (v: number) => void; disabled: boolean }) {
+function MonthGrid({ onSelect, disabled, onContextTap }: {
+  onSelect: (v: number) => void;
+  disabled: boolean;
+  onContextTap?: () => void;
+}) {
+  function handleClick(month: number) {
+    if (disabled) {
+      onContextTap?.();
+      return;
+    }
+    onSelect(month);
+  }
+
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6 }}>
       {MOIS_SHORT.slice(1).map((label, i) => {
@@ -373,8 +430,8 @@ function MonthGrid({ onSelect, disabled }: { onSelect: (v: number) => void; disa
         return (
           <motion.button
             key={month}
-            whileTap={!disabled ? { scale: 0.95 } : {}}
-            onClick={() => !disabled && onSelect(month)}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => handleClick(month)}
             style={{
               minHeight: 44,
               background: 'var(--bg-card)',
@@ -383,7 +440,7 @@ function MonthGrid({ onSelect, disabled }: { onSelect: (v: number) => void; disa
               color: 'var(--text)',
               fontSize: '0.85rem',
               fontWeight: 600,
-              cursor: disabled ? 'default' : 'pointer',
+              cursor: 'pointer',
               transition: 'all 0.1s ease',
             }}
           >

@@ -32,7 +32,7 @@ export function generateBoard(
 
       // Tentative matching : on confirme seulement après avoir sélectionné exactement 4 dates
       const availableForMatching = rawPool.filter(d => !usedIds.has(d.id));
-      const tentativeMatching = availableForMatching.length >= 4 && Math.random() < 0.33;
+      const tentativeMatching = availableForMatching.length >= 4 && Math.random() < 0.3;
 
       const finalCardCount = tentativeMatching ? 4 : cardCount;
       const selectedDates = selectDatesForCell(rawPool, finalCardCount, maxLevel, playerKnowledge, usedIds);

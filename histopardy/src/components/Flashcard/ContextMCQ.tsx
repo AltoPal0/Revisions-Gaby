@@ -7,13 +7,17 @@ interface ContextMCQProps {
   onAnswer: (choice: string) => void;
   disabled: boolean;
   correctEvenement?: string;
+  onContextTap?: () => void;
 }
 
-export default function ContextMCQ({ contexte, choices, onAnswer, disabled, correctEvenement }: ContextMCQProps) {
+export default function ContextMCQ({ contexte, choices, onAnswer, disabled, correctEvenement, onContextTap }: ContextMCQProps) {
   const [selected, setSelected] = useState<string | null>(null);
 
   function handleSelect(choice: string) {
-    if (disabled) return;
+    if (disabled) {
+      onContextTap?.();
+      return;
+    }
     setSelected(choice);
     onAnswer(choice);
   }
@@ -78,7 +82,7 @@ export default function ContextMCQ({ contexte, choices, onAnswer, disabled, corr
                 fontSize: '0.88rem',
                 fontWeight: 600,
                 textAlign: 'left',
-                cursor: disabled ? 'default' : 'pointer',
+                cursor: 'pointer',
                 lineHeight: 1.4,
                 transition: 'all 0.15s ease',
                 display: 'flex',

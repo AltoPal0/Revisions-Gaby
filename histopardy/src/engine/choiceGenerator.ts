@@ -61,16 +61,16 @@ export function generateContextChoices(
   targetMatiere: string,
   allDates: { evenement: string; theme: string; matiere: string }[]
 ): string[] {
-  // Distractors : même thème d'abord, puis même matière
-  const sameTheme = allDates.filter(d => d.theme === targetTheme && d.evenement !== targetEvenement);
+  // Distractors : même thème d'abord, puis même matière — jamais d'autre matière
+  const sameTheme = allDates.filter(d => d.matiere === targetMatiere && d.theme === targetTheme && d.evenement !== targetEvenement);
   const sameMatiere = allDates.filter(d => d.matiere === targetMatiere && d.theme !== targetTheme && d.evenement !== targetEvenement);
 
   const pool = [...sameTheme, ...sameMatiere];
   const shuffled = shuffleArray(pool);
   const distractors = shuffled.slice(0, 3).map(d => d.evenement);
 
-  // Compléter si pas assez
-  const fallback = allDates.filter(d => d.evenement !== targetEvenement && !distractors.includes(d.evenement));
+  // Compléter si pas assez (reste dans la même matière)
+  const fallback = allDates.filter(d => d.matiere === targetMatiere && d.evenement !== targetEvenement && !distractors.includes(d.evenement));
   while (distractors.length < 3 && fallback.length > 0) {
     distractors.push(fallback.splice(Math.floor(Math.random() * fallback.length), 1)[0].evenement);
   }
