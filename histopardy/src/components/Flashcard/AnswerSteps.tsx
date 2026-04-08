@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { FlashcardState, NormalizedDate, AnswerResult } from '../../types';
+import QuestionModifierModal from '../ui/QuestionModifierModal';
+import ContextMCQ from './ContextMCQ';
 
 const MOIS_FULL = ['', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
   'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
@@ -9,12 +11,14 @@ const MOIS_SHORT = ['', 'Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû'
 interface AnswerStepsProps {
   card: FlashcardState;
   nd: NormalizedDate;
+  playerId: string;
+  onAnswerContext: (choice: string) => void;
   onAnswerYear: (choice: number) => void;
   onAnswerMonth: (choice: number) => void;
   onAnswerDay: (choice: number) => void;
 }
 
-export default function AnswerSteps({ card, nd, onAnswerYear, onAnswerMonth, onAnswerDay }: AnswerStepsProps) {
+export default function AnswerSteps({ card, nd, playerId, onAnswerContext, onAnswerYear, onAnswerMonth, onAnswerDay }: AnswerStepsProps) {
   const [shakeKey, setShakeKey] = useState(0);
 
   useEffect(() => {
@@ -25,9 +29,11 @@ export default function AnswerSteps({ card, nd, onAnswerYear, onAnswerMonth, onA
 
   if (!card.flipped) return null;
 
-  const allGood = card.yearResult === 'correct' &&
-    (!nd.date.hasMonth || card.monthResult === 'correct') &&
-    (!nd.date.hasDay || card.dayResult === 'correct');
+  const allGood = card.isContextOnly
+    ? card.contextResult === 'correct'
+    : card.yearResult === 'correct' &&
+      (!nd.date.hasMonth || card.monthResult === 'correct') &&
+      (!nd.date.hasDay || card.dayResult === 'correct');
 
   // === État complété ===
   if (card.completed) {
@@ -47,24 +53,65 @@ export default function AnswerSteps({ card, nd, onAnswerYear, onAnswerMonth, onA
           <div style={{ fontSize: '1.8rem', marginBottom: 6 }}>🎉</div>
           <div style={{ color: 'var(--green)', fontWeight: 800, fontSize: '1.1rem' }}>Parfait !</div>
           <div style={{ color: 'var(--text)', fontWeight: 700, fontSize: '1rem', marginTop: 6 }}>
-            {nd.date.raw}
+            {nd.evenement}
           </div>
+          {!card.isContextOnly && (
+            <div style={{ color: 'var(--text-dim)', fontSize: '0.85rem', marginTop: 4 }}>
+              {nd.date.raw}
+            </div>
+          )}
         </motion.div>
       );
     }
 
     // === Réponse fausse : panel éducatif ===
-    return <WrongAnswerPanel card={card} nd={nd} shakeKey={shakeKey} />;
+    if (card.isContextOnly) {
+      return <ContextWrongPanel nd={nd} />;
+    }
+    return <WrongAnswerPanel card={card} nd={nd} shakeKey={shakeKey} playerId={playerId} />;
+  }
+
+  // === Étape contexte (question de type 'context') ===
+  if (card.contextStep && card.contextChoices) {
+    return (
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+        <ContextMCQ
+          contexte={nd.contexte}
+          choices={card.contextChoices}
+          onAnswer={onAnswerContext}
+          disabled={card.contextResult !== null && card.contextResult !== undefined}
+          correctEvenement={card.contextResult !== null && card.contextResult !== undefined ? nd.evenement : undefined}
+        />
+      </motion.div>
+    );
   }
 
   // === Étapes de réponse ===
   return (
     <div style={{ width: '100%' }}>
+      {/* Badge bonus contexte réussi */}
+      {card.contextResult === 'correct' && (
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+          marginBottom: 10,
+          padding: '6px 10px',
+          background: 'rgba(78,140,232,0.1)',
+          border: '1px solid rgba(78,140,232,0.3)',
+          borderRadius: 'var(--radius-sm)',
+          fontSize: '0.78rem',
+          color: '#4e8ce8',
+          fontWeight: 700,
+        }}>
+          ✓ Contexte trouvé · Trouve la date pour ×2
+        </div>
+      )}
       <AnimatePresence mode="wait">
         {card.currentStep === 'year' && (
           <motion.div key="year" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
             <StepLabel label="Quelle année ?" result={card.yearResult} />
-            <ChoiceGrid choices={card.yearChoices} onSelect={onAnswerYear} disabled={card.yearResult !== null} correctValue={nd.date.year} selectedWrong={card.yearResult === 'wrong' ? undefined : undefined} />
+            <ChoiceGrid choices={card.yearChoices} onSelect={onAnswerYear} disabled={card.yearResult !== null} correctValue={nd.date.year} />
           </motion.div>
         )}
         {card.currentStep === 'month' && (
@@ -84,8 +131,53 @@ export default function AnswerSteps({ card, nd, onAnswerYear, onAnswerMonth, onA
   );
 }
 
+// ===== Panel simplifié pour mauvaise réponse contexte-only =====
+function ContextWrongPanel({ nd }: { nd: NormalizedDate }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      style={{
+        background: 'rgba(231, 76, 60, 0.06)',
+        border: '1px solid rgba(231, 76, 60, 0.4)',
+        borderRadius: 'var(--radius)',
+        overflow: 'hidden',
+      }}
+    >
+      <div style={{
+        background: 'rgba(231, 76, 60, 0.15)',
+        padding: '12px 16px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10,
+        borderBottom: '1px solid rgba(231, 76, 60, 0.2)',
+      }}>
+        <span style={{ fontSize: '1.2rem' }}>❌</span>
+        <span style={{ color: 'var(--red)', fontWeight: 800, fontSize: '0.95rem' }}>
+          La bonne réponse était
+        </span>
+      </div>
+      <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div style={{ fontWeight: 800, color: 'var(--text)', fontSize: '1rem' }}>
+          {nd.evenement}
+        </div>
+        <div style={{
+          borderTop: '1px solid var(--border)',
+          paddingTop: 10,
+          fontSize: '0.82rem',
+          color: 'var(--text-dim)',
+          lineHeight: 1.5,
+        }}>
+          {nd.contexte}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 // ===== Panel éducatif pour mauvaise réponse =====
-function WrongAnswerPanel({ card, nd, shakeKey }: { card: FlashcardState; nd: NormalizedDate; shakeKey: number }) {
+function WrongAnswerPanel({ card, nd, shakeKey, playerId }: { card: FlashcardState; nd: NormalizedDate; shakeKey: number; playerId: string }) {
+  const [modifierOpen, setModifierOpen] = useState(false);
   // Construire un résumé de ce qui était juste et faux
   const yearWrong = card.yearResult === 'wrong';
   const monthWrong = card.monthResult === 'wrong';
@@ -115,6 +207,16 @@ function WrongAnswerPanel({ card, nd, shakeKey }: { card: FlashcardState; nd: No
         overflow: 'hidden',
       }}
     >
+      {/* Modal modificateur de précision */}
+      <QuestionModifierModal
+        open={modifierOpen}
+        onClose={() => setModifierOpen(false)}
+        dateId={card.dateId}
+        evenement={nd.evenement}
+        playerId={playerId}
+        currentPrecision={card.precision}
+      />
+
       {/* En-tête rouge */}
       <div style={{
         background: 'rgba(231, 76, 60, 0.15)',
@@ -125,9 +227,25 @@ function WrongAnswerPanel({ card, nd, shakeKey }: { card: FlashcardState; nd: No
         borderBottom: '1px solid rgba(231, 76, 60, 0.2)',
       }}>
         <span style={{ fontSize: '1.2rem' }}>❌</span>
-        <span style={{ color: 'var(--red)', fontWeight: 800, fontSize: '0.95rem' }}>
+        <span style={{ color: 'var(--red)', fontWeight: 800, fontSize: '0.95rem', flex: 1 }}>
           La bonne réponse était
         </span>
+        <button
+          onClick={() => setModifierOpen(true)}
+          style={{
+            background: 'rgba(255,255,255,0.08)',
+            border: '1px solid rgba(255,255,255,0.15)',
+            borderRadius: 'var(--radius-sm)',
+            padding: '5px 8px',
+            cursor: 'pointer',
+            fontSize: '1rem',
+            lineHeight: 1,
+            color: 'var(--text-dim)',
+          }}
+          title="Adapter le niveau de détail pour cette date"
+        >
+          ⚙️
+        </button>
       </div>
 
       <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 14 }}>

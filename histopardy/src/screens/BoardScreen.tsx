@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore } from '../store/gameStore';
 import { usePlayerStore } from '../store/playerStore';
 import { useCountUp } from '../hooks/useCountUp';
@@ -26,6 +27,7 @@ export default function BoardScreen() {
     );
   }
 
+  const [expandedCol, setExpandedCol] = useState<number | null>(null);
   const totalCells = board.cells.flat().length;
   const playedCells = board.cells.flat().filter(c => c.played).length;
 
@@ -83,6 +85,76 @@ export default function BoardScreen() {
         padding: '8px',
         overscrollBehavior: 'contain',
       }}>
+        {/* Tooltip titre complet */}
+        <AnimatePresence>
+          {expandedCol !== null && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setExpandedCol(null)}
+                style={{
+                  position: 'fixed',
+                  inset: 0,
+                  zIndex: 50,
+                }}
+              />
+              {/* Popup */}
+              <motion.div
+                initial={{ opacity: 0, y: -6, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -6, scale: 0.95 }}
+                transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+                style={{
+                  position: 'fixed',
+                  top: 'max(80px, env(safe-area-inset-top, 0px) + 80px)',
+                  left: 16,
+                  right: 16,
+                  zIndex: 51,
+                  background: 'var(--bg-surface)',
+                  border: `1px solid ${MATIERE_COLORS[board.columns[expandedCol].matiere]}`,
+                  borderRadius: 'var(--radius)',
+                  padding: '14px 16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 12,
+                  boxShadow: `0 4px 24px ${MATIERE_COLORS[board.columns[expandedCol].matiere]}30`,
+                }}
+              >
+                <div style={{
+                  width: 12,
+                  height: 12,
+                  borderRadius: '50%',
+                  background: MATIERE_COLORS[board.columns[expandedCol].matiere],
+                  flexShrink: 0,
+                }} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 3 }}>
+                    Thème · {board.columns[expandedCol].matiere}
+                  </div>
+                  <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text)', lineHeight: 1.3 }}>
+                    {board.columns[expandedCol].theme}
+                  </div>
+                </div>
+                <button
+                  onClick={() => setExpandedCol(null)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--text-muted)',
+                    fontSize: '1.1rem',
+                    cursor: 'pointer',
+                    padding: '4px',
+                    flexShrink: 0,
+                  }}
+                >✕</button>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+
         {/* Column headers */}
         <div style={{
           display: 'grid',
@@ -90,47 +162,53 @@ export default function BoardScreen() {
           gap: 6,
           marginBottom: 6,
         }}>
-          {board.columns.map((col, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.08 }}
-              style={{
-                background: 'var(--bg-surface)',
-                border: `1px solid ${MATIERE_COLORS[col.matiere]}40`,
-                borderRadius: 'var(--radius-sm)',
-                padding: '8px 6px',
-                textAlign: 'center',
-                minHeight: 52,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 2,
-              }}
-            >
-              <div style={{
-                width: 8,
-                height: 8,
-                borderRadius: '50%',
-                background: MATIERE_COLORS[col.matiere],
-                flexShrink: 0,
-              }} />
-              <span style={{
-                fontSize: 'clamp(0.6rem, 2.5vw, 0.75rem)',
-                color: 'var(--text-dim)',
-                lineHeight: 1.2,
-                fontWeight: 600,
-                display: '-webkit-box',
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden',
-              }}>
-                {abbreviateTheme(col.theme)}
-              </span>
-            </motion.div>
-          ))}
+          {board.columns.map((col, i) => {
+            const expanded = expandedCol === i;
+            return (
+              <motion.button
+                key={i}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.08 }}
+                onClick={() => setExpandedCol(expanded ? null : i)}
+                style={{
+                  background: expanded ? 'var(--bg-card)' : 'var(--bg-surface)',
+                  border: `1px solid ${expanded ? MATIERE_COLORS[col.matiere] : MATIERE_COLORS[col.matiere] + '40'}`,
+                  borderRadius: 'var(--radius-sm)',
+                  padding: '8px 6px',
+                  textAlign: 'center',
+                  minHeight: 52,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 2,
+                  cursor: 'pointer',
+                  transition: 'border-color 0.15s ease',
+                }}
+              >
+                <div style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  background: MATIERE_COLORS[col.matiere],
+                  flexShrink: 0,
+                }} />
+                <span style={{
+                  fontSize: 'clamp(0.6rem, 2.5vw, 0.75rem)',
+                  color: 'var(--text-dim)',
+                  lineHeight: 1.2,
+                  fontWeight: 600,
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                }}>
+                  {abbreviateTheme(col.theme)}
+                </span>
+              </motion.button>
+            );
+          })}
         </div>
 
         {/* Cells */}

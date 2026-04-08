@@ -33,13 +33,18 @@ export function generateBoard(
       const selectedDates = selectDatesForCell(pool, cardCount, maxLevel, playerKnowledge, usedIds);
       selectedDates.forEach(d => usedIds.add(d.id));
 
+      // ~30% de chance d'être une question contexte à tous les niveaux (1 carte forcée)
+      const useContext = selectedDates.length > 0 && Math.random() < 0.3;
+      const contextDates = useContext ? [selectedDates[0]] : selectedDates;
+
       rowCells.push({
         column: col,
         row,
         points,
-        cardCount: selectedDates.length,
-        dateIds: selectedDates.map(d => d.id),
+        cardCount: contextDates.length,
+        dateIds: contextDates.map(d => d.id),
         played: false,
+        questionType: useContext ? 'context' : 'date',
       });
     }
     cells.push(rowCells);

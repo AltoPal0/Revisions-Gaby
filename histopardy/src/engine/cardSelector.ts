@@ -27,9 +27,17 @@ export function selectDatesForCell(
   playerKnowledge: Record<string, DateKnowledge>,
   alreadyUsedIds: Set<string>
 ): NormalizedDate[] {
-  let eligible = pool.filter(d => d.niveau <= maxLevel && !alreadyUsedIds.has(d.id));
+  // Les dates avec précision simplifiée comptent comme niveau inférieur
+  function effectiveNiveau(d: NormalizedDate): number {
+    const p = playerKnowledge[d.id]?.precision;
+    if (p === 'year_only') return 1;
+    if (p === 'year_month') return Math.min(d.niveau, 2);
+    return d.niveau;
+  }
 
-  // Si pas assez de dates, relâcher le filtre de niveau
+  let eligible = pool.filter(d => effectiveNiveau(d) <= maxLevel && !alreadyUsedIds.has(d.id));
+
+  // Si pas assez de dates, relâcher le filtre de niveau (mais garder les dates simplifiées à leur niveau effectif)
   if (eligible.length < count) {
     eligible = pool.filter(d => !alreadyUsedIds.has(d.id));
   }

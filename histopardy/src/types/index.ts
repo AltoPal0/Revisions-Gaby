@@ -30,11 +30,14 @@ export interface NormalizedDate {
 }
 
 // ===== JOUEURS =====
+export type DatePrecision = 'full' | 'year_month' | 'year_only';
+
 export interface DateKnowledge {
   attempts: number;
   successes: number;
   perfectCount: number;
   lastAttempt: number;
+  precision?: DatePrecision;
 }
 
 export interface Player {
@@ -71,6 +74,7 @@ export interface BoardCell {
   played: boolean;
   playedBy?: string;
   earnedPoints?: number;
+  questionType?: 'date' | 'context';
 }
 
 export interface BoardState {
@@ -89,6 +93,12 @@ export interface FlashcardState {
   dateId: string;
   flipped: boolean;
   currentStep: AnswerStep;
+  precision?: DatePrecision;
+  // Champ contexte (questions de type 'context')
+  isContextOnly?: boolean;   // true = question contexte pure, pas d'étapes date
+  contextStep: boolean;
+  contextChoices?: string[];
+  contextResult?: AnswerResult;
   yearChoices: number[];
   dayChoices?: number[];
   yearResult: AnswerResult;
@@ -96,6 +106,26 @@ export interface FlashcardState {
   dayResult: AnswerResult;
   completed: boolean;
   pointsEarned: number;
+  isBonus?: boolean;
+  bonusMultiplier?: number;
+}
+
+export interface BonusCard {
+  dateId: string;
+  originalRow: number;
+  multiplier: number;
+  scheduledAfterCell: number;
+}
+
+export type MiniInteractionType = 'proximity' | 'ordering' | 'timeline';
+
+export interface MiniInteractionState {
+  type: MiniInteractionType;
+  dateId: string;
+  helperDateIds: string[];
+  resolved: boolean;
+  success: boolean | null;
+  halfPoints: number;
 }
 
 export interface QuestionState {
@@ -105,6 +135,7 @@ export interface QuestionState {
   currentCardIndex: number;
   totalEarned: number;
   finished: boolean;
+  activeMiniInteraction: MiniInteractionState | null;
 }
 
 // ===== NAVIGATION =====

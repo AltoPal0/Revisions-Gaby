@@ -42,5 +42,15 @@ export function calculateCardPoints(
     earned *= 1.5;
   }
 
+  // Bonus ×2 si question contexte réussie + date correcte
+  if (card.contextResult === 'correct' && yearOk && monthOk && dayOk) {
+    earned *= 2;
+  }
+
+  // Appliquer le multiplicateur bonus (carte de révision)
+  if (card.bonusMultiplier) {
+    earned *= card.bonusMultiplier;
+  }
+
   return Math.round(earned);
 }

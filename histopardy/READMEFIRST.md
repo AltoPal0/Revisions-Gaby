@@ -141,6 +141,71 @@ base = POINT_VALUES[row] / totalCards
 
 ---
 
+## Types de questions
+
+### Type 1 — Question "Date" (`questionType: 'date'`)
+
+Cas par défaut pour **toutes les cases** (100 → 500 pts).
+
+**Flow :**
+1. La flashcard affiche l'événement + contexte (face avant).
+2. Le joueur la retourne → la face arrière indique la précision attendue (Année / Mois·Année / Jour·Mois·Année).
+3. Séquence de saisie :
+   - **Année** → QCM 4 choix (leurres proches générés par `choiceGenerator.ts`)
+   - **Mois** (si `hasMonth`) → grille des 12 mois
+   - **Jour** (si `hasDay`) → QCM 4 choix
+4. Tout correct → confetti + auto-avance 1,5 s.
+5. Erreur → `WrongAnswerPanel` (date correcte + détail par étape + contexte à retenir) + bouton manuel "✓ J'ai retenu" + mini-interaction de rattrapage (voir ci-dessous).
+
+**Scoring :**
+```
+base = points_cellule / nb_cartes
++ 50 % base si année correcte
++ 30 % base si mois correct
++ 20 % base si jour correct
+× 1,5 si tout correct (combo)
+```
+
+---
+
+### Type 2 — Question "Contexte" (`questionType: 'context'`)
+
+Variante disponible **uniquement sur les lignes 400 et 500 pts** (~40 % de probabilité, 1 carte forcée). Déclenchée dans `boardGenerator.ts`.
+
+**Flow :**
+1. La flashcard affiche l'événement côté recto comme d'habitude.
+2. Après le flip, on commence par une étape **contexte** avant la date :
+   - Le texte de contexte de la carte s'affiche.
+   - Le joueur choisit parmi 4 noms d'événements lequel correspond à ce contexte (`ContextMCQ.tsx`).
+   - Badge "×2 si tu trouves aussi la date" affiché pendant cette étape.
+3. Ensuite, séquence date identique au Type 1 (année → mois → jour).
+4. **Bonus ×2** si contexte trouvé ET date entièrement correcte (appliqué dans `scoring.ts`).
+5. Sur erreur de contexte : la réponse correcte est révélée, puis la séquence date continue quand même.
+
+**Scoring :**
+```
+(même calcul que Type 1)
+× 2 supplémentaire si contextResult === 'correct' ET date entièrement correcte
+```
+
+---
+
+### Mini-interactions de rattrapage
+
+Déclenchées automatiquement après une mauvaise réponse (`QuestionScreen.tsx` → `triggerMiniInteraction()`). Le joueur doit terminer la mini-interaction avant de pouvoir passer à la carte suivante. Succès → demi-points récupérés + carte bonus dans 2 cases.
+
+Il existe **3 types**, choisis aléatoirement dans `gameStore` :
+
+| Type (`MiniInteractionType`) | Composant | Description |
+|---|---|---|
+| `proximity` | `ProximityMCQ.tsx` | QCM : "Cette date est la plus proche de quel événement ?" — 4 choix dont le plus proche chronologiquement et 1 leurre éloigné |
+| `ordering` | `ChronologicalOrder.tsx` | 3 cartes (la cible + 2 helpers) à remettre dans l'ordre chronologique en les déplaçant avec ↑ / ↓ |
+| `timeline` | `TimelineCarousel.tsx` | Placer la date cible au bon endroit sur une frise composée de helpers déjà triés, en glissant ou en cliquant "Avant / Après" |
+
+**Point d'attention sur l'ambiguïté des dates-années :** quand une date est une année seule (sans mois), son ordre relatif à d'autres dates de la même année est indéterminable. Les deux composants `ordering` et `timeline` utilisent une fonction `compareDates()` qui retourne `0` dans ce cas, et acceptent toute position/ordre chronologiquement non-contredite (plage `[minCorrect, maxCorrect]` pour `timeline`, vérification paire-à-paire pour `ordering`).
+
+---
+
 ## Pièges connus
 
 | Piège | Solution en place |

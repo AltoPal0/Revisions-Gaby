@@ -51,6 +51,33 @@ export function generateDayChoices(correctDay: number): number[] {
   return shuffleArray([...choices]);
 }
 
+/**
+ * Génère 4 choix d'événements pour une question de type "contexte".
+ * Retourne [evenement_correct, ...3 distractors] mélangés.
+ */
+export function generateContextChoices(
+  targetEvenement: string,
+  targetTheme: string,
+  targetMatiere: string,
+  allDates: { evenement: string; theme: string; matiere: string }[]
+): string[] {
+  // Distractors : même thème d'abord, puis même matière
+  const sameTheme = allDates.filter(d => d.theme === targetTheme && d.evenement !== targetEvenement);
+  const sameMatiere = allDates.filter(d => d.matiere === targetMatiere && d.theme !== targetTheme && d.evenement !== targetEvenement);
+
+  const pool = [...sameTheme, ...sameMatiere];
+  const shuffled = shuffleArray(pool);
+  const distractors = shuffled.slice(0, 3).map(d => d.evenement);
+
+  // Compléter si pas assez
+  const fallback = allDates.filter(d => d.evenement !== targetEvenement && !distractors.includes(d.evenement));
+  while (distractors.length < 3 && fallback.length > 0) {
+    distractors.push(fallback.splice(Math.floor(Math.random() * fallback.length), 1)[0].evenement);
+  }
+
+  return shuffleArray([targetEvenement, ...distractors.slice(0, 3)]);
+}
+
 function shuffleArray<T>(arr: T[]): T[] {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {

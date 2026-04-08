@@ -1,11 +1,12 @@
 import { create } from 'zustand';
 import type {
   Screen, GameConfig, BoardState, QuestionState, NormalizedDate,
-  FlashcardState,
+  FlashcardState, DatePrecision, BonusCard, MiniInteractionType,
 } from '../types';
 import { generateBoard } from '../engine/boardGenerator';
-import { generateYearChoices, generateDayChoices } from '../engine/choiceGenerator';
+import { generateYearChoices, generateDayChoices, generateContextChoices } from '../engine/choiceGenerator';
 import { calculateCardPoints } from '../engine/scoring';
+import { POINT_VALUES } from '../lib/constants';
 import { usePlayerStore } from './playerStore';
 import { ALL_DATES } from '../data/loader';
 
@@ -17,6 +18,7 @@ interface GameState {
   allDates: NormalizedDate[];
   dataReady: boolean;
   pendingPlayerIds: string[];  // Joueurs sélectionnés avant la config
+  bonusQueue: BonusCard[];
 
   // Actions
   setScreen: (screen: Screen) => void;
@@ -24,21 +26,38 @@ interface GameState {
   startGame: (config: GameConfig) => void;
   selectCell: (row: number, col: number) => void;
   flipCard: () => void;
+  answerContext: (choice: string) => void;
   answerYear: (choice: number) => void;
   answerMonth: (choice: number) => void;
   answerDay: (choice: number) => void;
+  triggerMiniInteraction: () => void;
+  resolveMiniInteraction: (success: boolean) => void;
   nextCard: () => void;
   finishQuestion: () => void;
   endGame: () => void;
   goHome: () => void;
 }
 
-function makeFlashcard(dateId: string, allDates: NormalizedDate[]): FlashcardState {
+function makeFlashcard(
+  dateId: string,
+  allDates: NormalizedDate[],
+  precision?: DatePrecision,
+  isContext?: boolean
+): FlashcardState {
   const nd = allDates.find(d => d.id === dateId)!;
+  const contextChoices = isContext
+    ? generateContextChoices(nd.evenement, nd.theme, nd.matiere, allDates)
+    : undefined;
   return {
     dateId,
-    flipped: false,
+    // Questions contexte-only : déjà "retournées" pour afficher directement le QCM
+    flipped: isContext ?? false,
+    isContextOnly: isContext ?? false,
     currentStep: 'year',
+    precision,
+    contextStep: isContext ?? false,
+    contextChoices,
+    contextResult: undefined,
     yearChoices: generateYearChoices(nd.date.year),
     dayChoices: nd.date.hasDay ? generateDayChoices(nd.date.day!) : undefined,
     yearResult: null,
@@ -55,6 +74,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   board: null,
   pendingPlayerIds: [],
   question: null,
+  bonusQueue: [],
   allDates: ALL_DATES,      // Synchrone dès le démarrage
   dataReady: ALL_DATES.length > 0,
 
@@ -78,19 +98,42 @@ export const useGameStore = create<GameState>((set, get) => ({
       config,
       board: { ...board, currentPlayerIndex: 0, scores },
       question: null,
+      bonusQueue: [],
       screen: 'board',
     });
   },
 
   selectCell: (row, col) => {
-    const { board, allDates } = get();
-    if (!board) return;
+    const { board, allDates, config } = get();
+    if (!board || !config) return;
     const cell = board.cells[row][col];
     if (cell.played) return;
 
-    const cards: FlashcardState[] = cell.dateIds.map(id => makeFlashcard(id, allDates));
+    const currentPlayerId = config.playerIds[board.currentPlayerIndex];
+    const playerKnowledge = usePlayerStore.getState().players[currentPlayerId]?.dateKnowledge ?? {};
+    const isContext = cell.questionType === 'context';
+    const cellCards: FlashcardState[] = cell.dateIds.map(id =>
+      makeFlashcard(id, allDates, playerKnowledge[id]?.precision, isContext)
+    );
+
+    // Injecter les cartes bonus dues en tête de liste
+    const { bonusQueue } = get();
+    const playedCells = board.cells.flat().filter(c => c.played).length;
+    const dueBonus = bonusQueue.filter(b => b.scheduledAfterCell <= playedCells);
+    const remainingBonus = bonusQueue.filter(b => b.scheduledAfterCell > playedCells);
+
+    const bonusCards: FlashcardState[] = dueBonus.map(b =>
+      ({
+        ...makeFlashcard(b.dateId, allDates, playerKnowledge[b.dateId]?.precision),
+        isBonus: true,
+        bonusMultiplier: b.multiplier,
+      })
+    );
+
+    const cards = [...bonusCards, ...cellCards];
 
     set({
+      bonusQueue: remainingBonus,
       question: {
         cellRow: row,
         cellCol: col,
@@ -98,6 +141,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         currentCardIndex: 0,
         totalEarned: 0,
         finished: false,
+        activeMiniInteraction: null,
       },
       screen: 'question',
     });
@@ -114,6 +158,33 @@ export const useGameStore = create<GameState>((set, get) => ({
     });
   },
 
+  answerContext: (choice: string) => {
+    set(state => {
+      if (!state.question) return state;
+      const { cards, currentCardIndex, cellRow } = state.question;
+      const card = { ...cards[currentCardIndex] };
+      const nd = state.allDates.find(d => d.id === card.dateId)!;
+      const correct = choice === nd.evenement;
+      card.contextResult = correct ? 'correct' : 'wrong';
+
+      if (card.isContextOnly) {
+        // Question contexte pure : pas d'étapes date, on complète directement
+        card.completed = true;
+        card.pointsEarned = correct ? POINT_VALUES[cellRow] : 0;
+      } else if (correct) {
+        card.contextStep = false;
+        // Passe aux étapes date normalement
+      } else {
+        card.completed = true;
+        card.pointsEarned = 0;
+      }
+
+      const newCards = [...cards];
+      newCards[currentCardIndex] = card;
+      return { question: { ...state.question, cards: newCards } };
+    });
+  },
+
   answerYear: (choice: number) => {
     set(state => {
       if (!state.question) return state;
@@ -123,16 +194,19 @@ export const useGameStore = create<GameState>((set, get) => ({
       const correct = choice === nd.date.year;
       card.yearResult = correct ? 'correct' : 'wrong';
 
+      const precision = card.precision;
       if (!correct) {
         card.completed = true;
         // Marquer mois et jour comme "revealed" si applicables
         if (nd.date.hasMonth) card.monthResult = 'revealed';
         if (nd.date.hasDay) card.dayResult = 'revealed';
       } else {
-        // Passe à l'étape suivante
-        if (nd.date.hasMonth) {
+        // Passe à l'étape suivante selon la précision définie
+        const askMonth = nd.date.hasMonth && precision !== 'year_only';
+        const askDay = nd.date.hasDay && precision !== 'year_only' && precision !== 'year_month';
+        if (askMonth) {
           card.currentStep = 'month';
-        } else if (nd.date.hasDay) {
+        } else if (askDay) {
           card.currentStep = 'day';
         } else {
           card.completed = true;
@@ -165,7 +239,8 @@ export const useGameStore = create<GameState>((set, get) => ({
         card.completed = true;
         if (nd.date.hasDay) card.dayResult = 'revealed';
       } else {
-        if (nd.date.hasDay) {
+        const askDay = nd.date.hasDay && card.precision !== 'year_month' && card.precision !== 'year_only';
+        if (askDay) {
           card.currentStep = 'day';
         } else {
           card.completed = true;
@@ -203,6 +278,85 @@ export const useGameStore = create<GameState>((set, get) => ({
     });
   },
 
+  triggerMiniInteraction: () => {
+    set(state => {
+      if (!state.question) return state;
+      const { cards, currentCardIndex, cellRow } = state.question;
+      const card = cards[currentCardIndex];
+      const nd = state.allDates.find(d => d.id === card.dateId)!;
+
+      // Choisir des helpers (même matière, triés par proximité temporelle)
+      const sameMatiere = state.allDates.filter(
+        d => d.matiere === nd.matiere && d.id !== nd.id
+      );
+      const sorted = [...sameMatiere].sort(
+        (a, b) => Math.abs(a.date.year - nd.date.year) - Math.abs(b.date.year - nd.date.year)
+      );
+      const helperDateIds = sorted.slice(0, 6).map(d => d.id);
+
+      // Base points pour la demi-récompense
+      const base = (100 * (cellRow + 1)) / cards.length;
+      const halfPoints = Math.max(Math.round(base * 0.5), 10);
+
+      // Choisir le type aléatoirement parmi les 3
+      const types: MiniInteractionType[] = ['proximity', 'ordering', 'timeline'];
+      const type = types[Math.floor(Math.random() * types.length)];
+
+      return {
+        question: {
+          ...state.question,
+          activeMiniInteraction: {
+            type,
+            dateId: nd.id,
+            helperDateIds,
+            resolved: false,
+            success: null,
+            halfPoints,
+          },
+        },
+      };
+    });
+  },
+
+  resolveMiniInteraction: (success: boolean) => {
+    const { question, board } = get();
+    if (!question || !question.activeMiniInteraction) return;
+
+    const { activeMiniInteraction, cards, currentCardIndex, cellRow } = question;
+    const dateId = activeMiniInteraction.dateId;
+    const halfPoints = activeMiniInteraction.halfPoints;
+
+    // Si succès, enregistrer les demi-points sur la carte
+    let newCards = [...cards];
+    if (success) {
+      const card = { ...newCards[currentCardIndex] };
+      card.pointsEarned = card.pointsEarned + halfPoints;
+      newCards[currentCardIndex] = card;
+    }
+
+    // Planifier la carte bonus (+20%) dans 2 cases
+    const playedCells = board ? board.cells.flat().filter(c => c.played).length : 0;
+    const bonus: BonusCard = {
+      dateId,
+      originalRow: cellRow,
+      multiplier: 1.2,
+      scheduledAfterCell: playedCells + 2,
+    };
+
+    set(state => ({
+      bonusQueue: [...state.bonusQueue, bonus],
+      question: state.question ? {
+        ...state.question,
+        cards: newCards,
+        activeMiniInteraction: {
+          ...state.question.activeMiniInteraction!,
+          resolved: true,
+          success,
+        },
+      } : null,
+    }));
+  },
+
   nextCard: () => {
     set(state => {
       if (!state.question) return state;
@@ -228,6 +382,7 @@ export const useGameStore = create<GameState>((set, get) => ({
           ...state.question,
           currentCardIndex: nextIndex,
           totalEarned: newTotal,
+          activeMiniInteraction: null,
         },
       };
     });

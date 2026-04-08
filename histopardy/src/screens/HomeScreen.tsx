@@ -2,8 +2,27 @@ import { motion } from 'framer-motion';
 import { useGameStore } from '../store/gameStore';
 import Layout from '../components/Layout';
 
+async function forceReload() {
+  // Vider tous les caches du service worker
+  if ('caches' in window) {
+    const keys = await caches.keys();
+    await Promise.all(keys.map(k => caches.delete(k)));
+  }
+  // Désinscrire le service worker pour forcer le refetch au prochain chargement
+  if ('serviceWorker' in navigator) {
+    const regs = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(regs.map(r => r.unregister()));
+  }
+  window.location.reload();
+}
+
 export default function HomeScreen() {
   const setScreen = useGameStore(s => s.setScreen);
+
+  function handleForceReload() {
+    const ok = window.confirm('Recharger le dernier build ?');
+    if (ok) forceReload();
+  }
 
   return (
     <Layout
@@ -95,16 +114,20 @@ export default function HomeScreen() {
         </button>
       </motion.div>
 
-      {/* Version */}
+      {/* Version — zone cliquable cachée pour forcer un rechargement du build */}
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
+        onClick={handleForceReload}
         style={{
           position: 'absolute',
           bottom: 'max(16px, env(safe-area-inset-bottom))',
           color: 'var(--text-muted)',
           fontSize: '0.75rem',
+          cursor: 'default',
+          userSelect: 'none',
+          WebkitTapHighlightColor: 'transparent',
         }}
       >
         v1.0 · Histoire, Géo, HGGSP

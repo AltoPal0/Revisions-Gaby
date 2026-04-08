@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Player, DateKnowledge } from '../types';
+import type { Player, DateKnowledge, DatePrecision } from '../types';
 
 function generateId(): string {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {
@@ -19,6 +19,7 @@ interface PlayerState {
   createPlayer: (name: string) => Player;
   getPlayer: (id: string) => Player | undefined;
   updateKnowledge: (playerId: string, dateId: string, yearCorrect: boolean, allCorrect: boolean) => void;
+  setDatePrecision: (playerId: string, dateId: string, precision: DatePrecision) => void;
   addScore: (playerId: string, points: number) => void;
   incrementGamesPlayed: (playerId: string) => void;
   deletePlayer: (id: string) => void;
@@ -65,6 +66,28 @@ export const usePlayerStore = create<PlayerState>()(
               [playerId]: {
                 ...player,
                 dateKnowledge: { ...player.dateKnowledge, [dateId]: updated },
+              },
+            },
+          };
+        });
+      },
+
+      setDatePrecision: (playerId: string, dateId: string, precision: DatePrecision) => {
+        set(state => {
+          const player = state.players[playerId];
+          if (!player) return state;
+          const existing: DateKnowledge = player.dateKnowledge[dateId] ?? {
+            attempts: 0, successes: 0, perfectCount: 0, lastAttempt: 0,
+          };
+          return {
+            players: {
+              ...state.players,
+              [playerId]: {
+                ...player,
+                dateKnowledge: {
+                  ...player.dateKnowledge,
+                  [dateId]: { ...existing, precision },
+                },
               },
             },
           };

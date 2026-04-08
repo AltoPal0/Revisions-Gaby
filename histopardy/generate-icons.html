@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Générer les icônes HistoPardy</title>
+  <style>
+    body { font-family: system-ui; background: #070b14; color: #fff; display: flex; flex-direction: column; align-items: center; padding: 40px; gap: 20px; }
+    canvas { border-radius: 22%; display: block; }
+    button { background: #e8b84b; border: none; padding: 14px 28px; font-size: 1rem; font-weight: 700; border-radius: 10px; cursor: pointer; color: #070b14; }
+    p { color: #aaa; font-size: 0.9rem; text-align: center; max-width: 400px; }
+  </style>
+</head>
+<body>
+  <h2>Générateur d'icônes HistoPardy</h2>
+  <canvas id="c" width="512" height="512"></canvas>
+  <button onclick="download()">Télécharger les 2 icônes PNG</button>
+  <p>Les fichiers <code>icon-192.png</code> et <code>icon-512.png</code> seront téléchargés.<br>
+     Place-les dans <code>histopardy/public/icons/</code></p>
+
+  <script>
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+    const S = 512;
+
+    function draw(size) {
+      const c = document.createElement('canvas');
+      c.width = size; c.height = size;
+      const g = c.getContext('2d');
+
+      // Fond dégradé sombre
+      const bg = g.createLinearGradient(0, 0, size, size);
+      bg.addColorStop(0, '#0d1525');
+      bg.addColorStop(1, '#070b14');
+      g.fillStyle = bg;
+      g.roundRect(0, 0, size, size, size * 0.18);
+      g.fill();
+
+      // Grille Jeopardy (6 cellules 3×2)
+      const pad = size * 0.08;
+      const cols = 3, rows = 2;
+      const cellW = (size - pad * 2 - (cols - 1) * size * 0.03) / cols;
+      const cellH = (size * 0.45 - (rows - 1) * size * 0.03) / rows;
+      const colors = ['#e8b84b', '#4bc5e8', '#e84b8a', '#e8b84b', '#4bc5e8', '#e84b8a'];
+
+      for (let r = 0; r < rows; r++) {
+        for (let col = 0; col < cols; col++) {
+          const x = pad + col * (cellW + size * 0.03);
+          const y = pad + r * (cellH + size * 0.03);
+          const color = colors[r * cols + col];
+          g.fillStyle = color + '22';
+          g.strokeStyle = color + '88';
+          g.lineWidth = size * 0.012;
+          g.beginPath();
+          g.roundRect(x, y, cellW, cellH, size * 0.04);
+          g.fill();
+          g.stroke();
+        }
+      }
+
+      // Texte "HP"
+      const textY = size * 0.72;
+      g.font = `900 ${size * 0.38}px system-ui, sans-serif`;
+      g.textAlign = 'center';
+      g.textBaseline = 'middle';
+
+      // Ombre dorée
+      g.shadowColor = '#e8b84b';
+      g.shadowBlur = size * 0.06;
+      g.fillStyle = '#e8b84b';
+      g.fillText('HP', size / 2, textY);
+      g.shadowBlur = 0;
+
+      // Sous-titre
+      g.font = `700 ${size * 0.075}px system-ui, sans-serif`;
+      g.fillStyle = '#ffffff66';
+      g.fillText('HISTOPARDY', size / 2, size * 0.9);
+
+      return c;
+    }
+
+    // Afficher la prévisualisation
+    const preview = draw(S);
+    const ctx2 = canvas.getContext('2d');
+    ctx2.drawImage(preview, 0, 0);
+
+    function download() {
+      [192, 512].forEach(size => {
+        const c = draw(size);
+        const a = document.createElement('a');
+        a.download = `icon-${size}.png`;
+        a.href = c.toDataURL('image/png');
+        a.click();
+      });
+    }
+  </script>
+</body>
+</html>
