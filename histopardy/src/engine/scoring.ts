@@ -42,9 +42,11 @@ export function calculateCardPoints(
     earned *= 1.5;
   }
 
-  // Bonus ×2 si question contexte réussie + date correcte
+  // Bonus si question contexte réussie + date correcte
+  // isContextOnly (Quel est l'événement ?) : ×1.5
+  // Contexte classique (montrer le contexte avant date) : ×2
   if (card.contextResult === 'correct' && yearOk && monthOk && dayOk) {
-    earned *= 2;
+    earned *= card.isContextOnly ? 1.5 : 2;
   }
 
   // Appliquer le multiplicateur bonus (carte de révision)

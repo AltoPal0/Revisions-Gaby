@@ -9,12 +9,13 @@ import Layout from '../components/Layout';
 import ProximityMCQ from '../components/MiniInteractions/ProximityMCQ';
 import ChronologicalOrder from '../components/MiniInteractions/ChronologicalOrder';
 import TimelineCarousel from '../components/MiniInteractions/TimelineCarousel';
+import MatchingQuestion from '../components/MatchingQuestion/MatchingQuestion';
 
 export default function QuestionScreen() {
   const {
     question, board, config, allDates,
     flipCard, answerContext, answerYear, answerMonth, answerDay,
-    triggerMiniInteraction, resolveMiniInteraction,
+    triggerMiniInteraction, resolveMiniInteraction, submitMatching,
     nextCard, finishQuestion,
   } = useGameStore();
   const { players } = usePlayerStore();
@@ -28,14 +29,12 @@ export default function QuestionScreen() {
   const activeMini = question?.activeMiniInteraction ?? null;
 
   const isLastCard = currentCardIndex === cards.length - 1;
-  const allGood = !!(card?.completed && (
-    card.isContextOnly
-      ? card.contextResult === 'correct'
-      : card.contextResult !== 'wrong' &&
-        card.yearResult === 'correct' &&
-        (!nd?.date.hasMonth || card.monthResult === 'correct') &&
-        (!nd?.date.hasDay || card.dayResult === 'correct')
-  ));
+  const allGood = !!(card?.completed &&
+    card.contextResult !== 'wrong' &&
+    card.yearResult === 'correct' &&
+    (!nd?.date.hasMonth || card.monthResult === 'correct') &&
+    (!nd?.date.hasDay || card.dayResult === 'correct')
+  );
 
   // Auto-advance uniquement sur bonne réponse (1.5s)
   // Sur erreur : pas d'auto-advance, le joueur doit taper "J'ai retenu"
@@ -59,6 +58,58 @@ export default function QuestionScreen() {
     if (card.isContextOnly) return;
     triggerMiniInteraction();
   }, [card?.completed]);
+
+  // Branche matching — après tous les hooks, avant les guards classiques
+  if (question?.matchingQuestion && board && config) {
+    const matchingDates = question.matchingQuestion.pairs
+      .map(p => allDates.find(d => d.id === p.dateId)!)
+      .filter(Boolean);
+    const cell = board.cells[question.cellRow][question.cellCol];
+    const matchingPlayerId = config.playerIds[board.currentPlayerIndex];
+    const matchingPlayerName = players[matchingPlayerId]?.name ?? '';
+
+    return (
+      <Layout style={{ position: 'relative' }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          padding: '12px 16px',
+          paddingTop: 'max(12px, env(safe-area-inset-top))',
+          background: 'var(--bg-surface)',
+          borderBottom: '1px solid var(--border)',
+          gap: 10,
+          flexShrink: 0,
+        }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+              {config.mode === 'duel' ? matchingPlayerName : 'Question'}
+            </div>
+            <div style={{ fontWeight: 700, fontSize: '0.95rem' }}>
+              Associer · {cell.points} pts
+            </div>
+          </div>
+          <div style={{
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border-bright)',
+            borderRadius: 'var(--radius-sm)',
+            padding: '6px 12px',
+            fontSize: '0.85rem',
+            color: 'var(--gold)',
+            fontWeight: 700,
+          }}>
+            +{question.matchingQuestion.score}
+          </div>
+        </div>
+        <MatchingQuestion
+          initialState={question.matchingQuestion}
+          dates={matchingDates}
+          cellPoints={cell.points}
+          onSubmit={submitMatching}
+          onFinish={finishQuestion}
+        />
+      </Layout>
+    );
+  }
 
   // Early returns après tous les hooks
   if (!question || !board || !config || !card || !nd) return null;

@@ -74,7 +74,7 @@ export interface BoardCell {
   played: boolean;
   playedBy?: string;
   earnedPoints?: number;
-  questionType?: 'date' | 'context';
+  questionType?: 'date' | 'context' | 'matching';
 }
 
 export interface BoardState {
@@ -128,6 +128,28 @@ export interface MiniInteractionState {
   halfPoints: number;
 }
 
+// ===== QUESTION MATCHING =====
+
+export interface MatchingPair {
+  dateId: string;
+  evenement: string;
+  dateRaw: string;
+  matched: boolean;
+  assignedDateRaw: string | null;
+  result: 'correct' | 'wrong' | null;
+}
+
+export type MatchingPhase = 'playing' | 'validated';
+
+export interface MatchingQuestionState {
+  pairs: MatchingPair[];
+  datePool: Array<{ raw: string; idx: number }>;
+  selectedEventIndex: number | null;
+  phase: MatchingPhase;
+  score: number;
+  correctCount: number;
+}
+
 export interface QuestionState {
   cellRow: number;
   cellCol: number;
@@ -136,6 +158,7 @@ export interface QuestionState {
   totalEarned: number;
   finished: boolean;
   activeMiniInteraction: MiniInteractionState | null;
+  matchingQuestion?: MatchingQuestionState;
 }
 
 // ===== NAVIGATION =====

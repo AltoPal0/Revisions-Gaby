@@ -2,11 +2,11 @@ import { create } from 'zustand';
 import type {
   Screen, GameConfig, BoardState, QuestionState, NormalizedDate,
   FlashcardState, DatePrecision, BonusCard, MiniInteractionType,
+  MatchingPair,
 } from '../types';
 import { generateBoard } from '../engine/boardGenerator';
 import { generateYearChoices, generateDayChoices, generateContextChoices } from '../engine/choiceGenerator';
 import { calculateCardPoints } from '../engine/scoring';
-import { POINT_VALUES } from '../lib/constants';
 import { usePlayerStore } from './playerStore';
 import { ALL_DATES } from '../data/loader';
 
@@ -32,6 +32,7 @@ interface GameState {
   answerDay: (choice: number) => void;
   triggerMiniInteraction: () => void;
   resolveMiniInteraction: (success: boolean) => void;
+  submitMatching: (pairs: MatchingPair[]) => void;
   nextCard: () => void;
   finishQuestion: () => void;
   endGame: () => void;
@@ -111,6 +112,43 @@ export const useGameStore = create<GameState>((set, get) => ({
 
     const currentPlayerId = config.playerIds[board.currentPlayerIndex];
     const playerKnowledge = usePlayerStore.getState().players[currentPlayerId]?.dateKnowledge ?? {};
+
+    // Branche matching
+    if (cell.questionType === 'matching') {
+      const matchingDates = cell.dateIds.map(id => allDates.find(d => d.id === id)!);
+      const shuffled = [...matchingDates].sort(() => Math.random() - 0.5);
+      const datePool = shuffled.map((d, idx) => ({ raw: d.date.raw, idx }));
+      const pairs: MatchingPair[] = matchingDates.map(nd => ({
+        dateId: nd.id,
+        evenement: nd.evenement,
+        dateRaw: nd.date.raw,
+        matched: false,
+        assignedDateRaw: null,
+        result: null,
+      }));
+      set({
+        question: {
+          cellRow: row,
+          cellCol: col,
+          cards: [],
+          currentCardIndex: 0,
+          totalEarned: 0,
+          finished: false,
+          activeMiniInteraction: null,
+          matchingQuestion: {
+            pairs,
+            datePool,
+            selectedEventIndex: null,
+            phase: 'playing',
+            score: 0,
+            correctCount: 0,
+          },
+        },
+        screen: 'question',
+      });
+      return;
+    }
+
     const isContext = cell.questionType === 'context';
     const cellCards: FlashcardState[] = cell.dateIds.map(id =>
       makeFlashcard(id, allDates, playerKnowledge[id]?.precision, isContext)
@@ -161,16 +199,21 @@ export const useGameStore = create<GameState>((set, get) => ({
   answerContext: (choice: string) => {
     set(state => {
       if (!state.question) return state;
-      const { cards, currentCardIndex, cellRow } = state.question;
+      const { cards, currentCardIndex } = state.question;
       const card = { ...cards[currentCardIndex] };
       const nd = state.allDates.find(d => d.id === card.dateId)!;
       const correct = choice === nd.evenement;
       card.contextResult = correct ? 'correct' : 'wrong';
 
       if (card.isContextOnly) {
-        // Question contexte pure : pas d'étapes date, on complète directement
-        card.completed = true;
-        card.pointsEarned = correct ? POINT_VALUES[cellRow] : 0;
+        // Question contexte pure : si correct, on enchaîne sur les étapes de date (×1.5 si date aussi correcte)
+        if (correct) {
+          card.contextStep = false;
+          // La date sera demandée normalement ; le bonus ×1.5 est appliqué dans calculateCardPoints
+        } else {
+          card.completed = true;
+          card.pointsEarned = 0;
+        }
       } else if (correct) {
         card.contextStep = false;
         // Passe aux étapes date normalement
@@ -276,6 +319,33 @@ export const useGameStore = create<GameState>((set, get) => ({
       newCards[currentCardIndex] = card;
       return { question: { ...state.question, cards: newCards } };
     });
+  },
+
+  submitMatching: (pairs: MatchingPair[]) => {
+    const { question, board } = get();
+    if (!question || !board) return;
+    const cellPoints = board.cells[question.cellRow][question.cellCol].points;
+    const evaluated: MatchingPair[] = pairs.map(p => ({
+      ...p,
+      result: p.assignedDateRaw === p.dateRaw ? 'correct' : 'wrong',
+    }));
+    const correctCount = evaluated.filter(p => p.result === 'correct').length;
+    let score = correctCount * (cellPoints / 4);
+    if (correctCount === 4) score = Math.round(score * 1.25);
+    else score = Math.round(score);
+    set(state => ({
+      question: state.question ? {
+        ...state.question,
+        totalEarned: score,
+        matchingQuestion: state.question.matchingQuestion ? {
+          ...state.question.matchingQuestion,
+          pairs: evaluated,
+          phase: 'validated',
+          score,
+          correctCount,
+        } : undefined,
+      } : null,
+    }));
   },
 
   triggerMiniInteraction: () => {
@@ -394,8 +464,10 @@ export const useGameStore = create<GameState>((set, get) => ({
 
     const { cellRow, cellCol, cards } = question;
 
-    // Sommer TOUTES les cartes (évite le bug de la dernière carte non comptée)
-    const totalEarned = cards.reduce((sum, c) => sum + c.pointsEarned, 0);
+    // Sommer les points (matching ou cartes classiques)
+    const totalEarned = question.matchingQuestion
+      ? question.matchingQuestion.score
+      : cards.reduce((sum, c) => sum + c.pointsEarned, 0);
 
     const currentPlayerId = config.playerIds[board.currentPlayerIndex];
 
@@ -427,6 +499,13 @@ export const useGameStore = create<GameState>((set, get) => ({
         (card.monthResult === 'correct' || card.monthResult === null) &&
         (card.dayResult === 'correct' || card.dayResult === null);
       playerStore.updateKnowledge(currentPlayerId, card.dateId, yearCorrect, allCorrect);
+    }
+
+    if (question.matchingQuestion) {
+      for (const pair of question.matchingQuestion.pairs) {
+        const ok = pair.result === 'correct';
+        playerStore.updateKnowledge(currentPlayerId, pair.dateId, ok, ok);
+      }
     }
 
     // Vérifier si toutes les cases sont jouées

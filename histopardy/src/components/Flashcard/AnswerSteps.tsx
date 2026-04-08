@@ -29,11 +29,10 @@ export default function AnswerSteps({ card, nd, playerId, onAnswerContext, onAns
 
   if (!card.flipped) return null;
 
-  const allGood = card.isContextOnly
-    ? card.contextResult === 'correct'
-    : card.yearResult === 'correct' &&
-      (!nd.date.hasMonth || card.monthResult === 'correct') &&
-      (!nd.date.hasDay || card.dayResult === 'correct');
+  // Pour les cartes isContextOnly, la date est maintenant aussi demandée
+  const allGood = card.yearResult === 'correct' &&
+    (!nd.date.hasMonth || card.monthResult === 'correct') &&
+    (!nd.date.hasDay || card.dayResult === 'correct');
 
   // === État complété ===
   if (card.completed) {
@@ -55,17 +54,17 @@ export default function AnswerSteps({ card, nd, playerId, onAnswerContext, onAns
           <div style={{ color: 'var(--text)', fontWeight: 700, fontSize: '1rem', marginTop: 6 }}>
             {nd.evenement}
           </div>
-          {!card.isContextOnly && (
-            <div style={{ color: 'var(--text-dim)', fontSize: '0.85rem', marginTop: 4 }}>
-              {nd.date.raw}
-            </div>
-          )}
+          <div style={{ color: 'var(--text-dim)', fontSize: '0.85rem', marginTop: 4 }}>
+            {nd.date.raw}
+          </div>
         </motion.div>
       );
     }
 
     // === Réponse fausse : panel éducatif ===
-    if (card.isContextOnly) {
+    // isContextOnly + contexte raté → panel simplifié (pas de date à montrer)
+    // isContextOnly + contexte ok mais date ratée → panel complet
+    if (card.isContextOnly && card.contextResult === 'wrong') {
       return <ContextWrongPanel nd={nd} />;
     }
     return <WrongAnswerPanel card={card} nd={nd} shakeKey={shakeKey} playerId={playerId} />;
@@ -104,7 +103,7 @@ export default function AnswerSteps({ card, nd, playerId, onAnswerContext, onAns
           color: '#4e8ce8',
           fontWeight: 700,
         }}>
-          ✓ Contexte trouvé · Trouve la date pour ×2
+          ✓ Contexte trouvé · Trouve la date pour {card.isContextOnly ? '×1.5' : '×2'}
         </div>
       )}
       <AnimatePresence mode="wait">

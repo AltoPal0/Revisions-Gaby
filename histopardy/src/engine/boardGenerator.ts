@@ -26,25 +26,32 @@ export function generateBoard(
       const { cardCount, maxLevel } = DIFFICULTY_MAP[points];
 
       // Pool de dates pour ce thème
-      const pool = allDates.filter(
+      const rawPool = allDates.filter(
         d => d.matiere === column.matiere && d.theme === column.theme
       );
 
-      const selectedDates = selectDatesForCell(pool, cardCount, maxLevel, playerKnowledge, usedIds);
+      // Tentative matching : on confirme seulement après avoir sélectionné exactement 4 dates
+      const availableForMatching = rawPool.filter(d => !usedIds.has(d.id));
+      const tentativeMatching = availableForMatching.length >= 4 && Math.random() < 0.33;
+
+      const finalCardCount = tentativeMatching ? 4 : cardCount;
+      const selectedDates = selectDatesForCell(rawPool, finalCardCount, maxLevel, playerKnowledge, usedIds);
       selectedDates.forEach(d => usedIds.add(d.id));
 
-      // ~30% de chance d'être une question contexte à tous les niveaux (1 carte forcée)
-      const useContext = selectedDates.length > 0 && Math.random() < 0.3;
-      const contextDates = useContext ? [selectedDates[0]] : selectedDates;
+      // Confirmer le matching seulement si on a bien obtenu 4 dates
+      const useMatching = tentativeMatching && selectedDates.length === 4;
+      const useContext = !useMatching && selectedDates.length > 0 && Math.random() < 0.3;
+      const questionType = useMatching ? 'matching' : useContext ? 'context' : 'date';
+      const finalDates = useContext ? [selectedDates[0]] : selectedDates;
 
       rowCells.push({
         column: col,
         row,
         points,
-        cardCount: contextDates.length,
-        dateIds: contextDates.map(d => d.id),
+        cardCount: finalDates.length,
+        dateIds: finalDates.map(d => d.id),
         played: false,
-        questionType: useContext ? 'context' : 'date',
+        questionType,
       });
     }
     cells.push(rowCells);
