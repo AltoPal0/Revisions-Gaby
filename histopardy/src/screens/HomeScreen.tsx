@@ -130,7 +130,7 @@ export default function HomeScreen() {
           WebkitTapHighlightColor: 'transparent',
         }}
       >
-        v1.1 · Histoire, Géo, HGGSP
+        v1.2 · Histoire, Géo, HGGSP
       </motion.p>
     </Layout>
   );
