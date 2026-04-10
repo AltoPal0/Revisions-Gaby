@@ -20,6 +20,7 @@ interface PlayerState {
   getPlayer: (id: string) => Player | undefined;
   updateKnowledge: (playerId: string, dateId: string, yearCorrect: boolean, allCorrect: boolean) => void;
   setDatePrecision: (playerId: string, dateId: string, precision: DatePrecision) => void;
+  resetScore: (playerId: string) => void;
   addScore: (playerId: string, points: number) => void;
   incrementGamesPlayed: (playerId: string) => void;
   deletePlayer: (id: string) => void;
@@ -89,6 +90,19 @@ export const usePlayerStore = create<PlayerState>()(
                   [dateId]: { ...existing, precision },
                 },
               },
+            },
+          };
+        });
+      },
+
+      resetScore: (playerId: string) => {
+        set(state => {
+          const player = state.players[playerId];
+          if (!player) return state;
+          return {
+            players: {
+              ...state.players,
+              [playerId]: { ...player, totalScore: 0 },
             },
           };
         });

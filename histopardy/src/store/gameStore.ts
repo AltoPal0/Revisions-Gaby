@@ -94,7 +94,11 @@ export const useGameStore = create<GameState>((set, get) => ({
     const board = generateBoard(config, allDates, playerKnowledge);
     console.log('[startGame] board columns:', board.columns.length, 'cells rows:', board.cells.length);
     const scores: Record<string, number> = {};
-    for (const id of config.playerIds) scores[id] = 0;
+    const playerStoreForReset = usePlayerStore.getState();
+    for (const id of config.playerIds) {
+      scores[id] = 0;
+      playerStoreForReset.resetScore(id);
+    }
     set({
       config,
       board: { ...board, currentPlayerIndex: 0, scores },
@@ -330,9 +334,11 @@ export const useGameStore = create<GameState>((set, get) => ({
       result: p.assignedDateRaw === p.dateRaw ? 'correct' : 'wrong',
     }));
     const correctCount = evaluated.filter(p => p.result === 'correct').length;
-    let score = correctCount * (cellPoints / 4);
-    if (correctCount === 4) score = Math.round(score * 1.25);
-    else score = Math.round(score);
+    // Tout-ou-rien : zéro si au moins une paire est fausse
+    let score = 0;
+    if (correctCount === evaluated.length) {
+      score = Math.round(cellPoints * 1.25);
+    }
     set(state => ({
       question: state.question ? {
         ...state.question,

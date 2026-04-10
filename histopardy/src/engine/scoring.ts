@@ -19,28 +19,15 @@ export function calculateCardPoints(
   const cellPoints = POINT_VALUES[row];
   const base = cellPoints / totalCards;
 
-  let earned = 0;
-
-  if (card.yearResult === 'correct') {
-    earned += base * 0.5;
-  }
-
-  if (nd.date.hasMonth && card.monthResult === 'correct') {
-    earned += base * 0.3;
-  }
-
-  if (nd.date.hasDay && card.dayResult === 'correct') {
-    earned += base * 0.2;
-  }
-
-  // Bonus combo si tout est correct
+  // Tout-ou-rien : si une partie est fausse, zéro point
   const yearOk = card.yearResult === 'correct';
   const monthOk = !nd.date.hasMonth || card.monthResult === 'correct';
   const dayOk = !nd.date.hasDay || card.dayResult === 'correct';
 
-  if (yearOk && monthOk && dayOk) {
-    earned *= 1.5;
-  }
+  if (!yearOk || !monthOk || !dayOk) return 0;
+
+  // Tout correct : base × 1.5 (bonus combo)
+  let earned = base * 1.5;
 
   // Bonus si question contexte réussie + date correcte
   // isContextOnly (Quel est l'événement ?) : ×1.5
